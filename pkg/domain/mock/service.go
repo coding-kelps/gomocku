@@ -19,6 +19,7 @@ func NewMock() ports.Mock {
 			"name": "gomocku",
 			"version": "0.1",
 			"author": "Coding Kelps",
+			"desc": "A mock AI for testing",
 		},
 	}
 }
@@ -45,7 +46,7 @@ func (m *Mock) RespondBegin() (models.Position, error) {
 	return move, nil
 }
 
-func (m *Mock) RespondBoard(p []models.Position) (models.Position, error) {
+func (m *Mock) RespondBoard(p []models.Turn) (models.Position, error) {
 	// Set corresponding cells in board
 
 	// Arbitrary Choose cell in board as move
