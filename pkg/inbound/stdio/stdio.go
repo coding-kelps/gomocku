@@ -1,4 +1,4 @@
-package stdin
+package stdio
 
 import (
 	"regexp"
@@ -8,7 +8,7 @@ import (
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/ports"
 )
 
-type Stdin struct {
+type Stdio struct {
 	mock ports.Mock
 	handlers []handler
 }
@@ -19,23 +19,23 @@ type handler struct {
 	regex *regexp.Regexp
 }
 
-func NewStdin(m ports.Mock) *Stdin {
-	s := Stdin{mock: m}
+func NewStdio(m ports.Mock) *Stdio {
+	s := Stdio{mock: m}
 
 	s.handlers = []handler{
-		{"START", s.HandleStart, regexp.MustCompile(`START (\d+)`)},
-		{"TURN", s.HandleTurn, regexp.MustCompile(`TURN (\d+),(\d+)`)},
-		{"BEGIN", s.HandleBegin, regexp.MustCompile(`BEGIN`)},
-		{"BOARD", s.HandleBoard, regexp.MustCompile(`BOARD`)},
-		{"INFO", s.HandleInfo, regexp.MustCompile(`INFO`)},
-		{"END", s.HandleEnd, regexp.MustCompile(`END`)},
-		{"ABOUT", s.HandleAbout, regexp.MustCompile(`ABOUT`)},
+		{"START", s.handleStart, regexp.MustCompile(`^START (\d+)`)},
+		{"TURN", s.handleTurn, regexp.MustCompile(`^TURN (\d+),(\d+)`)},
+		{"BEGIN", s.handleBegin, regexp.MustCompile(`^BEGIN`)},
+		{"BOARD", s.handleBoard, regexp.MustCompile(`^BOARD`)},
+		{"INFO", s.handleInfo, regexp.MustCompile(`^INFO`)},
+		{"END", s.handleEnd, regexp.MustCompile(`^END`)},
+		{"ABOUT", s.handleAbout, regexp.MustCompile(`^ABOUT`)},
 	}
 
 	return &s
 }
 
-func (s *Stdin) Run() error {
+func (s *Stdio) Run() error {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
