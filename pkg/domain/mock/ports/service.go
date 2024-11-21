@@ -7,15 +7,15 @@ import (
 type Mock interface {
 	RespondStart(size uint8) error
 
-	RespondTurn(p models.Position) error
+	RespondTurn(p models.Position) (models.Position, error)
 
-	RespondBegin() error
+	RespondBegin() (models.Position, error)
 
-	RespondBoard(p []models.Position) error
+	RespondBoard(p []models.Position) (models.Position, error)
 
 	RespondInfo() error
 
 	RespondEnd() error
 
-	RespondAbout() error
+	RespondAbout() (map[string]string, error)
 }

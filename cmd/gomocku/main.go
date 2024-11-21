@@ -1,24 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock"
-	"github.com/coding-kelps/gomocku/pkg/inbound/stdin"
-	"github.com/coding-kelps/gomocku/pkg/outbound"
+	"github.com/coding-kelps/gomocku/pkg/inbound/stdio"
 )
 
 func main() {
-	fmt.Println("ça gomock")
+	mock := mock.NewMock()
 
-	stdout := outbound.NewStdout()
+	stdio := stdio.NewStdio(mock)
 
-	mock := mock.NewMock(stdout)
-
-	stdin := stdin.NewStdin(mock)
-
-	if err := stdin.Run(); err != nil {
+	if err := stdio.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
