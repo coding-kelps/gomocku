@@ -7,74 +7,79 @@ import (
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
 )
 
-func (std *Stdio) handleStart(s string) error {
-	size, err := std.parseStartArgs(s)
+func (std *Stdio) handleStart(input string) {
+	size, err := std.parseStartArgs(input)
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	err = std.mock.RespondStart(size)
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
-
-	return nil
 }
 
-func (std *Stdio) handleTurn(s string) error {
-	p, err := std.parseTurnArgs(s)
+func (std *Stdio) handleTurn(input string) {
+	p, err := std.parseTurnArgs(input)
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	move, err := std.mock.RespondTurn(p)
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	fmt.Printf("%d,%d\n", move.X, move.Y)
-
-	return nil
 }
 
-func (std *Stdio) handleBegin(input string) error {
+func (std *Stdio) handleBegin(input string) {
 	move, err := std.mock.RespondBegin()
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	fmt.Printf("%d,%d\n", move.X, move.Y)
-
-	return nil
 }
 
-func (std *Stdio) handleBoard(input string) error {
+func (std *Stdio) handleBoard(input string) {
 	move, err := std.mock.RespondBoard([]models.Position{})
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	fmt.Printf("%d,%d\n", move.X, move.Y)
-
-	return nil
 }
 
-func (std *Stdio) handleInfo(input string) error {
-	std.mock.RespondInfo()
-
-	return nil
+func (std *Stdio) handleInfo(input string) {
+	err := std.mock.RespondInfo()
+	if err != nil {
+		fmt.Printf("ERROR %s\n", err)
+		return
+	}
 }
 
-func (std *Stdio) handleEnd(input string) error {
-	std.mock.RespondEnd()
+func (std *Stdio) handleEnd(input string) {
+	err := std.mock.RespondEnd()
+	if err != nil {
+		fmt.Printf("ERROR %s\n", err)
+		return
+	}
 
-	return nil
+	std.running = false
 }
 
-func (std *Stdio) handleAbout(input string) error {
+func (std *Stdio) handleAbout(input string) {
 	about, err := std.mock.RespondAbout()
 	if err != nil {
-		return err
+		fmt.Printf("ERROR %s\n", err)
+		return
 	}
 
 	infos := make([]string, 0, len(about))
@@ -86,6 +91,8 @@ func (std *Stdio) handleAbout(input string) error {
 	}
 
 	fmt.Println(strings.Join(infos, ", "))
+}
 
-	return nil
+func (std *Stdio) handleUnknown(input string) {
+	fmt.Printf("UNKNOWN unknown command \"%s\"\n", input)
 }
