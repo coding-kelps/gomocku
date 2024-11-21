@@ -11,7 +11,7 @@ type Mock interface {
 
 	RespondBegin() (models.Position, error)
 
-	RespondBoard(p []models.Position) (models.Position, error)
+	RespondBoard(p []models.Turn) (models.Position, error)
 
 	RespondInfo() error
 

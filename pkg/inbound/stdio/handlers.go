@@ -3,6 +3,7 @@ package stdio
 import (
 	"fmt"
 	"strings"
+	"regexp"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
 )
@@ -48,7 +49,29 @@ func (std *Stdio) handleBegin(input string) {
 }
 
 func (std *Stdio) handleBoard(input string) {
-	move, err := std.mock.RespondBoard([]models.Position{})
+	turns := []models.Turn{}
+	done := false
+	r := regexp.MustCompile(`^DONE$`)
+	
+	for !done {
+		if std.scanner.Scan() {
+			i := std.scanner.Text()
+			
+			if r.MatchString(i) {
+				done = true
+			} else {
+				turn, err := std.parseBoardTurn(i)
+				if err != nil {
+					fmt.Printf("ERROR %s\n", err)
+					continue
+				}
+
+				turns = append(turns, turn)
+			}
+		}
+	}
+
+	move, err := std.mock.RespondBoard(turns)
 	if err != nil {
 		fmt.Printf("ERROR %s\n", err)
 		return

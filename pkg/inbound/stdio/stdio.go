@@ -11,6 +11,7 @@ import (
 type Stdio struct {
 	mock ports.Mock
 	handlers []handler
+	scanner *bufio.Scanner
 	running bool
 }
 
@@ -21,7 +22,10 @@ type handler struct {
 }
 
 func NewStdio(m ports.Mock) *Stdio {
-	s := Stdio{mock: m}
+	s := Stdio{
+		mock: m,
+		scanner: bufio.NewScanner(os.Stdin),
+	}
 
 	s.handlers = []handler{
 		{"START", s.handleStart, regexp.MustCompile(`^START`)},
@@ -37,12 +41,11 @@ func NewStdio(m ports.Mock) *Stdio {
 }
 
 func (std *Stdio) Run() error {
-	scanner := bufio.NewScanner(os.Stdin)
 	std.running = true
 
 	for std.running {
-		if scanner.Scan() {
-			input := scanner.Text()
+		if std.scanner.Scan() {
+			input := std.scanner.Text()
 			matched := false
 
 			for _, h := range std.handlers {
