@@ -72,7 +72,7 @@ type WrongFieldError struct {
 }
 
 func (e *WrongFieldError) Error() string {
-	return "playing field can only be either 1 (Own) or 2 (Opponent)"
+	return "playing field can only be either 1 (Us) or 2 (Opponent)"
 }
 
 func (std *Stdio) parseBoardTurn(s string) (models.Turn, error) {
@@ -93,7 +93,7 @@ func (std *Stdio) parseBoardTurn(s string) (models.Turn, error) {
 	}
 
 	player := models.Player(nb - 1)
-	if !(player == models.White || player == models.Black) {
+	if !(player == models.Us || player == models.Opponent) {
 		return models.Turn{}, &WrongFieldError{}
 	}
 
