@@ -2,8 +2,8 @@ package stdio
 
 import (
 	"fmt"
-	"strings"
 	"regexp"
+	"strings"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
 )
@@ -52,11 +52,11 @@ func (std *Stdio) handleBoard(input string) {
 	turns := []models.Turn{}
 	done := false
 	r := regexp.MustCompile(`^DONE$`)
-	
+
 	for !done {
 		if std.scanner.Scan() {
 			i := std.scanner.Text()
-			
+
 			if r.MatchString(i) {
 				done = true
 			} else {

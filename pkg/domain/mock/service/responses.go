@@ -65,7 +65,7 @@ func (m *Mock) RespondBoard(turns []models.Turn) (models.Position, error) {
 	if m.board == nil {
 		return models.Position{}, &models.BoardUnsetError{}
 	}
-	
+
 	for _, t := range turns {
 		status, err := playerToCellStatus(t.Player)
 		if err != nil {

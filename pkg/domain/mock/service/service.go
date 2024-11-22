@@ -1,8 +1,8 @@
 package service
 
 import (
-    "math/rand"
-    "time"
+	"math/rand"
+	"time"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/ports"
@@ -11,7 +11,7 @@ import (
 type Mock struct {
 	board *models.Board
 	about map[string]string
-	rng *rand.Rand
+	rng   *rand.Rand
 
 	ports.Mock
 }
@@ -34,4 +34,3 @@ func NewMockWithSeed(seed int64) ports.Mock {
 		rng: rand.New(source),
 	}
 }
-
