@@ -19,6 +19,9 @@ jobs:
       - name: Build Binary with Makefile
         run: make build
 
+      - name: Build Binary with Makefile
+        run: ls
+
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
@@ -32,4 +35,4 @@ jobs:
             build/release/gomocku-1.0.0.zip
             build/release/gomocku-1.0.0.zip
             build/release/sha256sum.txt
-          token: ${{ secrets.GOMOCKU_RELEASE_AUTO_BINARY_TOKEN }}
+          token: ${{ secrets.RELEASE_BINARIES_UPLOAD_TOKEN }}
