@@ -96,10 +96,6 @@ func (m *Mock) RespondInfo() error {
 }
 
 func (m *Mock) RespondEnd() error {
-	if m.board == nil {
-		return &models.BoardUnsetError{}
-	}
-
 	return nil
 }
 
