@@ -2,22 +2,37 @@
 APP_NAME := gomocku
 VERSION := 1.0.0
 BUILD_DIR := build
-GO_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+RELEASE_DIR := $(BUILD_DIR)/release
+MAIN_FILE := ./cmd/gomocku/main.go
 
 # Go settings
 GO ?= go
 GOFLAGS := -mod=vendor
 LDFLAGS := -X main.version=$(VERSION)
 
-# Targets
-.PHONY: all build test run clean fmt lint vet
+# Define platforms and architectures
+PLATFORMS := linux darwin windows
+ARCHS := amd64 arm64
 
 all: build
 
 build:
-	@echo "Building $(APP_NAME)..."
-	mkdir -p $(BUILD_DIR)/$(APP_NAME)
-	$(GO) build -o $(BUILD_DIR)/$(APP_NAME) -ldflags "$(LDFLAGS)" ./...
+	mkdir -p $(BUILD_DIR)
+	$(GO) build -o $(RELEASE_DIR)/$(APP_NAME) -ldflags "$(LDFLAGS)" $(MAIN_FILE);
+
+release:
+	mkdir -p $(RELEASE_DIR)
+	@for platform in $(PLATFORMS); do \
+		for arch in $(ARCHS); do \
+			echo "Building $(APP_NAME)-$$platform-$$arch..."; \
+			extension=""; \
+			if [ "$$platform" = "windows" ]; then \
+				extension=".exe"; \
+			fi; \
+			GOOS=$$platform GOARCH=$$arch $(GO) build -o $(RELEASE_DIR)/$(APP_NAME)-$$platform-$$arch$$extension -ldflags "$(LDFLAGS)" $(MAIN_FILE); \
+		done; \
+	done
+	
 
 test:
 	@echo "Running tests..."
@@ -55,6 +70,7 @@ help:
 	@echo "Targets:"
 	@echo "  all       Build the project (default target)"
 	@echo "  build     Build the binary"
+	@echo "  release   Build the binary for all platforms and architectures"
 	@echo "  test      Run all tests"
 	@echo "  run       Run the application"
 	@echo "  clean     Remove build artifacts"
@@ -63,3 +79,6 @@ help:
 	@echo "  vet       Run go vet to check for issues"
 	@echo "  deps      Install and tidy dependencies"
 	@echo "  help      Show this help"
+
+# Targets
+.PHONY: all build test run clean fmt lint vet
