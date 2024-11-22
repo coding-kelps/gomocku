@@ -1,18 +1,14 @@
 package main
 
 import (
-	"log"
-
 	"github.com/coding-kelps/gomocku/pkg/domain/mock"
-	"github.com/coding-kelps/gomocku/pkg/inbound/stdio"
+	"github.com/coding-kelps/gomocku/pkg/inbound"
 )
 
 func main() {
-	mock := mock.NewMock()
-
-	stdio := stdio.NewStdio(mock)
+	stdio := inbound.NewStdio(mock.NewMock())
 
 	if err := stdio.Run(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
