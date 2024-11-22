@@ -34,12 +34,6 @@ release:
 		done; \
 	done
 
-	echo "Archiving source code..."
-	echo "with zip..."
-	zip -r $(RELEASE_DIR)/$(APP_NAME)-$(VERSION).zip . -x ".git/*"  -x ".github/*" -x ".gitignore" -x "$(BUILD_DIR)/*"
-	echo "with tar..."
-	tar --exclude='.github/' --exclude='.git' --exclude='.gitignore' --exclude='$(BUILD_DIR)/' -czvf $(RELEASE_DIR)/$(APP_NAME)-$(VERSION).tar.gz .
-
 	echo "Generating SHA256 Sum..."
 	cd $(RELEASE_DIR) && sha256sum --binary ./* > sha256sum.txt
 
