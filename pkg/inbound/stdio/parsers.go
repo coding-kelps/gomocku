@@ -1,9 +1,9 @@
 package stdio
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
-	"fmt"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
 )
@@ -99,6 +99,6 @@ func (std *Stdio) parseBoardTurn(s string) (models.Turn, error) {
 
 	return models.Turn{
 		Position: position,
-		Player: player,
+		Player:   player,
 	}, nil
 }

@@ -1,29 +1,29 @@
 package stdio
 
 import (
-	"regexp"
 	"bufio"
 	"os"
+	"regexp"
 
 	"github.com/coding-kelps/gomocku/pkg/domain/mock/ports"
 )
 
 type Stdio struct {
-	mock ports.Mock
+	mock     ports.Mock
 	handlers []handler
-	scanner *bufio.Scanner
-	running bool
+	scanner  *bufio.Scanner
+	running  bool
 }
 
 type handler struct {
-	name string
-	caller func (s string)
-	regex *regexp.Regexp
+	name   string
+	caller func(s string)
+	regex  *regexp.Regexp
 }
 
 func NewStdio(m ports.Mock) *Stdio {
 	s := Stdio{
-		mock: m,
+		mock:    m,
 		scanner: bufio.NewScanner(os.Stdin),
 	}
 

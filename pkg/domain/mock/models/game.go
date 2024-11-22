@@ -12,7 +12,7 @@ type Position struct {
 type Player uint8
 
 const (
-	Us Player = 0
+	Us       Player = 0
 	Opponent Player = 1
 )
 
@@ -40,8 +40,8 @@ type Board struct {
 type CellStatus uint8
 
 const (
-	Available  CellStatus = 0
-	OwnStone CellStatus = 1
+	Available     CellStatus = 0
+	OwnStone      CellStatus = 1
 	OpponentStone CellStatus = 2
 )
 
@@ -100,8 +100,6 @@ func (b *Board) SetCell(position Position, status CellStatus) error {
 
 	return nil
 }
-
-
 
 type NoCellAvailableError struct {
 }
