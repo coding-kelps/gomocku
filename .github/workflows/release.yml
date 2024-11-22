@@ -23,13 +23,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/release/gomocku-darwin-amd64
-            build/release/gomocku-darwin-arm64
-            build/release/gomocku-linux-amd64
-            build/release/gomocku-linux-arm64
-            build/release/gomocku-windows-amd64.exe
-            build/release/gomocku-windows-arm64.exe
-            build/release/gomocku-1.0.0.zip
-            build/release/gomocku-1.0.0.zip
-            build/release/sha256sum.txt
+            build/release/*
           token: ${{ secrets.RELEASE_BINARIES_UPLOAD_TOKEN }}
