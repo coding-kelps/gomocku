@@ -1,6 +1,8 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Position struct {
 	Y uint8
@@ -97,6 +99,33 @@ func (b *Board) SetCell(position Position, status CellStatus) error {
 	b.cells[position.X][position.Y] = status
 
 	return nil
+}
+
+
+
+type NoCellAvailableError struct {
+}
+
+func (e *NoCellAvailableError) Error() string {
+	return "board full, no cell available"
+}
+
+func (b *Board) GetAvailableCells() ([]Position, error) {
+	availables := []Position{}
+
+	for x := range b.size {
+		for y := range b.size {
+			if b.cells[x][y] == Available {
+				availables = append(availables, Position{x, y})
+			}
+		}
+	}
+
+	if len(availables) == 0 {
+		return []Position{}, &NoCellAvailableError{}
+	}
+
+	return availables, nil
 }
 
 type BoardUnsetError struct {
