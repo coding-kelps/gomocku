@@ -89,11 +89,11 @@ func (e *CellUnavailableError) Error() string {
 
 func (b *Board) SetCell(position Position, status CellStatus) error {
 	if position.X > b.size || position.Y > b.size {
-		return &OutOfBoundError{position, b.size}
+		return &OutOfBoundError{position: position, boardSize: b.size}
 	}
 
 	if b.cells[position.X][position.Y] != Available {
-		return &CellUnavailableError{position}
+		return &CellUnavailableError{position: position}
 	}
 
 	b.cells[position.X][position.Y] = status
@@ -114,7 +114,7 @@ func (b *Board) GetAvailableCells() ([]Position, error) {
 	for x := range b.size {
 		for y := range b.size {
 			if b.cells[x][y] == Available {
-				availables = append(availables, Position{x, y})
+				availables = append(availables, Position{X: x, Y: y})
 			}
 		}
 	}

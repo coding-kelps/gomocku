@@ -37,7 +37,7 @@ func (std *Stdio) parseTurnArgs(s string) (models.Position, error) {
 	r := regexp.MustCompile(`^TURN (\d+,\d+)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 2 {
-		return models.Position{}, &InvalidFormatError{s, r}
+		return models.Position{}, &InvalidFormatError{s: s, r: r}
 	}
 
 	return std.parsePosition(m[1])
@@ -47,7 +47,7 @@ func (std *Stdio) parsePosition(s string) (models.Position, error) {
 	r := regexp.MustCompile(`^(\d+),(\d+)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 3 {
-		return models.Position{}, &InvalidFormatError{s, r}
+		return models.Position{}, &InvalidFormatError{s: s, r: r}
 	}
 
 	x, err := strconv.ParseUint(m[1], 0, 8)
@@ -79,7 +79,7 @@ func (std *Stdio) parseBoardTurn(s string) (models.Turn, error) {
 	r := regexp.MustCompile(`^(\d+,\d+),(\d)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 3 {
-		return models.Turn{}, &InvalidFormatError{s, r}
+		return models.Turn{}, &InvalidFormatError{s: s, r: r}
 	}
 
 	position, err := std.parsePosition(m[1])
