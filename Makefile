@@ -18,7 +18,7 @@ all: build
 
 build:
 	mkdir -p $(BUILD_DIR)
-	$(GO) build -o $(RELEASE_DIR)/$(APP_NAME) -ldflags "$(LDFLAGS)" $(MAIN_FILE);
+	$(GO) build -o $(BUILD_DIR)/$(APP_NAME) -ldflags "$(LDFLAGS)" $(MAIN_FILE);
 
 release:
 	mkdir -p $(RELEASE_DIR)
