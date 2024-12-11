@@ -20,6 +20,8 @@ func (std *Stdio) handleStart(input string) {
 		fmt.Printf("ERROR %s\n", err)
 		return
 	}
+
+	fmt.Print("OK\n");
 }
 
 func (std *Stdio) handleTurn(input string) {
