@@ -1,10 +1,10 @@
 package service
 
 import (
-	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
+	"github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )
 
-func (m *Mock) pickRandomMove() (models.Position, error) {
+func (m *AI) pickRandomMove() (models.Position, error) {
 	availables, err := m.board.GetAvailableCells()
 	if err != nil {
 		return models.Position{}, err

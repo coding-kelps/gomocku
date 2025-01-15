@@ -1,7 +1,7 @@
 package mock
 
 import (
-	"github.com/coding-kelps/gomocku/pkg/domain/mock/service"
+	"github.com/coding-kelps/gomocku/pkg/domain/ai/service"
 )
 
 var NewMock = service.NewMock

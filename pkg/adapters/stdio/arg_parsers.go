@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/coding-kelps/gomocku/pkg/domain/mock/models"
+	"github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )
 
 type InvalidFormatError struct {
@@ -75,7 +75,7 @@ func (e *WrongFieldError) Error() string {
 	return "playing field can only be either 1 (Us) or 2 (Opponent)"
 }
 
-func (std *Stdio) parseBoardTurn(s string) (models.Turn, error) {
+func (std *Stdio) parseBoardTurnArgs(s string) (models.Turn, error) {
 	r := regexp.MustCompile(`^(\d+,\d+),(\d)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 3 {
