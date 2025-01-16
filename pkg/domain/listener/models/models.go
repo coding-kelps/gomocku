@@ -75,3 +75,10 @@ type AboutCommand struct {
 func (c AboutCommand) CommandType() string {
 	return "about"
 }
+
+type UnknownCommand struct {
+}
+
+func (c UnknownCommand) CommandType() string {
+	return "unknown"
+}
