@@ -39,11 +39,6 @@ func (m *AI) PickMove() (models.Position, error) {
 		return models.Position{}, err
 	}
 
-	err = m.board.SetCell(move, models.OwnStone)
-	if err != nil {
-		return models.Position{}, err
-	}
-
 	return move, nil
 }
 
