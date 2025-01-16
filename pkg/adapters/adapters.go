@@ -1,4 +1,4 @@
-package inbound
+package adapters
 
 import (
 	"github.com/coding-kelps/gomocku/pkg/adapters/stdio"
