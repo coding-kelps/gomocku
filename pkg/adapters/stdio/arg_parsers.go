@@ -21,7 +21,7 @@ func (e *InvalidFormatError) Error() string {
 	)
 }
 
-func (std *Stdio) parseStartArgs(s string) (uint8, error) {
+func parseStartArgs(s string) (uint8, error) {
 	r := regexp.MustCompile(`^START (\d+)$`)
 	m := r.FindStringSubmatch(s)
 
@@ -33,17 +33,17 @@ func (std *Stdio) parseStartArgs(s string) (uint8, error) {
 	return uint8(size), nil
 }
 
-func (std *Stdio) parseTurnArgs(s string) (models.Position, error) {
+func parseTurnArgs(s string) (models.Position, error) {
 	r := regexp.MustCompile(`^TURN (\d+,\d+)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 2 {
 		return models.Position{}, &InvalidFormatError{s: s, r: r}
 	}
 
-	return std.parsePosition(m[1])
+	return parsePosition(m[1])
 }
 
-func (std *Stdio) parsePosition(s string) (models.Position, error) {
+func parsePosition(s string) (models.Position, error) {
 	r := regexp.MustCompile(`^(\d+),(\d+)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 3 {
@@ -75,14 +75,14 @@ func (e *WrongFieldError) Error() string {
 	return "playing field can only be either 1 (Us) or 2 (Opponent)"
 }
 
-func (std *Stdio) parseBoardTurnArgs(s string) (models.Turn, error) {
+func parseBoardTurnArgs(s string) (models.Turn, error) {
 	r := regexp.MustCompile(`^(\d+,\d+),(\d)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 3 {
 		return models.Turn{}, &InvalidFormatError{s: s, r: r}
 	}
 
-	position, err := std.parsePosition(m[1])
+	position, err := parsePosition(m[1])
 	if err != nil {
 		return models.Turn{}, err
 	}

@@ -1,14 +1,20 @@
 package main
 
 import (
-	"github.com/coding-kelps/gomocku/pkg/domain/mock"
+	"fmt"
+
 	"github.com/coding-kelps/gomocku/pkg/adapters"
+	"github.com/coding-kelps/gomocku/pkg/domain/ai"
+	"github.com/coding-kelps/gomocku/pkg/domain/listener"
 )
 
 func main() {
-	stdio := inbound.NewStdio(mock.NewMock())
+	stdio := adapters.NewStdio()
+	ai := ai.NewRandomAI()
+	listener := listener.NewListener(stdio, ai)
 
-	if err := stdio.Run(); err != nil {
-		panic(err)
+	err := listener.Listen()
+	if err != nil {
+		fmt.Printf("%e\n", err)
 	}
 }

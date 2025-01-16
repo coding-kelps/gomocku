@@ -1,8 +1,8 @@
-package mock
+package ai
 
 import (
 	"github.com/coding-kelps/gomocku/pkg/domain/ai/service"
 )
 
-var NewMock = service.NewMock
-var NewMockWithSeed = service.NewMockWithSeed
+var NewRandomAI = service.NewRandomAI
+var NewRandomAIWithSeed = service.NewRandomAIWithSeed

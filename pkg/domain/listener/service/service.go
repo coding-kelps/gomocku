@@ -1,16 +1,18 @@
 package service
 
 import (
+	"sync"
+
+	ai_ports "github.com/coding-kelps/gomocku/pkg/domain/ai/ports"
 	"github.com/coding-kelps/gomocku/pkg/domain/listener/models"
 	"github.com/coding-kelps/gomocku/pkg/domain/listener/ports"
-	ai_models "github.com/coding-kelps/gomocku/pkg/domain/ai/models"
-	ai_ports "github.com/coding-kelps/gomocku/pkg/domain/ai/ports"
 )
 
 type Listener struct {
-	managerInterface ports.ManagerInterface
-	ai ai_ports.AI
-	metadata map[string]string
+	managerInterface 	ports.ManagerInterface
+	metadata 			map[string]string
+	ai 					ai_ports.AI
+	lock				*sync.RWMutex
 
 	ports.Listener
 }
@@ -22,99 +24,38 @@ func (l Listener) Listen() error {
 	defer close(ch)
 
 	for cmd := range ch {
-		switch c := cmd.(type) {
-		case models.StartCommand:
-			err := l.ai.Init(c.Size)
-			if err != nil {
-				err2 := l.managerInterface.NotifyError(err.Error())
-				if err2 != nil {
-					return err2
-				}
-				continue
-			}
-
-			l.managerInterface.NotifyReadiness()
-			continue
-		case models.TurnCommand:
-			err := l.ai.RegisterMove(c.Position, ai_models.OpponentStone)
-			if err != nil {
-				err2 := l.managerInterface.NotifyError(err.Error())
-				if err2 != nil {
-					return err2
-				}
-				continue
-			}
-
-			pos, err := l.ai.PickMove()
-			if err != nil {
-				err2 := l.managerInterface.NotifyError(err.Error())
-				if err2 != nil {
-					return err2
-				}
-				continue
-			}
-
-			err = l.managerInterface.NotifyMove(pos)
-			if err != nil {
-				return err
-			}
-
-			continue
-		case models.BeginCommand:
-			pos, err := l.ai.PickMove()
-			if err != nil {
-				err2 := l.managerInterface.NotifyError(err.Error())
-				if err2 != nil {
-					return err2
-				}
-				continue
-			}
-
-			err = l.managerInterface.NotifyMove(pos)
-			if err != nil {
-				return err
-			}
-			
-			continue
-		case models.BoardCommand:
-			continue
-		case models.BoardTurnCommand:
-			continue
-		case models.BoardDoneCommand:
-			err := l.managerInterface.NotifyMove(ai_models.Position{X: 10, Y: 10})
-			if err != nil {
-				return err
-			}
-
-			continue
-		case models.InfoCommand:
-			continue
-		case models.EndCommand:
+		switch cmd.CommandType() {
+		case "start":
+			go l.startHandler(cmd.(models.StartCommand))
+		case "turn":
+			go l.turnHandler(cmd.(models.TurnCommand))
+		case "begin":
+			go l.beginHandler()
+		case "board":
+			go l.boardHandler()
+		case "board_turn":
+			go l.boardTurnHandler(cmd.(models.BoardTurnCommand))
+		case "board_done":
+			go l.boardDoneHandler()
+		case "end":
 			return nil
-		case models.AboutCommand:
-			err := l.managerInterface.NotifyMetadata(l.metadata)
-			if err != nil {
-				return err
-			}
-
-			continue
-		default:
-			err := l.managerInterface.NotifyUnknown()
-			if err != nil {
-				return err
-			}
-
-			continue
+		case "info":
+			go l.infoHandler(cmd.(models.InfoCommand))
+		case "about":
+			go l.aboutHandler()
+		case "unknown":
+			go l.UnknownHandler()
 		}
 	}
 
 	return nil
-} 
+}
 
 func NewListener(managerInterface ports.ManagerInterface, ai ai_ports.AI) ports.Listener {
 	return &Listener{
 		managerInterface: managerInterface,
 		ai: ai,
+		lock: &sync.RWMutex{},
 		metadata: map[string]string{
 			"name":    "gomocku",
 			"version": "0.1",
