@@ -25,25 +25,25 @@ func (l *Listener) Listen() error {
 	for cmd := range ch {
 		switch cmd.CommandType() {
 		case "start":
-			go l.startHandler(cmd.(models.StartCommand))
+			l.startHandler(cmd.(models.StartCommand))
 		case "turn":
-			go l.turnHandler(cmd.(models.TurnCommand))
+			l.turnHandler(cmd.(models.TurnCommand))
 		case "begin":
-			go l.beginHandler()
+			l.beginHandler()
 		case "board":
-			go l.boardHandler()
+			l.boardHandler()
 		case "board_turn":
-			go l.boardTurnHandler(cmd.(models.BoardTurnCommand))
+			l.boardTurnHandler(cmd.(models.BoardTurnCommand))
 		case "board_done":
-			go l.boardDoneHandler()
+			l.boardDoneHandler()
 		case "end":
 			return nil
 		case "info":
-			go l.infoHandler(cmd.(models.InfoCommand))
+			l.infoHandler(cmd.(models.InfoCommand))
 		case "about":
-			go l.aboutHandler()
+			l.aboutHandler()
 		case "unknown":
-			go l.UnknownHandler()
+			l.UnknownHandler()
 		}
 	}
 
