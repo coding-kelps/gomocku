@@ -6,7 +6,6 @@ import (
 )
 
 func (l *Listener) startHandler(c models.StartCommand) error {
-	l.lock.Lock()
 	err := l.ai.Init(c.Size)
 	if err != nil {
 		err2 := l.managerInterface.NotifyError(err.Error())
@@ -15,7 +14,6 @@ func (l *Listener) startHandler(c models.StartCommand) error {
 		}
 		return nil
 	}
-	l.lock.Unlock()
 
 	err = l.managerInterface.NotifyReadiness()
 	if err != nil {
@@ -27,7 +25,6 @@ func (l *Listener) startHandler(c models.StartCommand) error {
 }
 
 func (l *Listener) turnHandler(c models.TurnCommand) error {
-	l.lock.Lock()
 	err := l.ai.RegisterMove(c.Position, ai_models.OpponentStone)
 	if err != nil {
 		err2 := l.managerInterface.NotifyError(err.Error())
@@ -54,7 +51,6 @@ func (l *Listener) turnHandler(c models.TurnCommand) error {
 		}
 		return nil
 	}
-	l.lock.Unlock()
 
 	err = l.managerInterface.NotifyMove(pos)
 	if err != nil {
@@ -98,7 +94,6 @@ func (l *Listener) boardHandler() error {
 }
 
 func (l *Listener) boardTurnHandler(c models.BoardTurnCommand) error {
-	l.lock.Lock()
 	err := l.ai.RegisterMove(c.Turn.Position, ai_models.CellStatus(c.Turn.Player))
 	if err != nil {
 		err2 := l.managerInterface.NotifyError(err.Error())
@@ -107,13 +102,11 @@ func (l *Listener) boardTurnHandler(c models.BoardTurnCommand) error {
 		}
 		return nil
 	}
-	l.lock.Unlock()
 
 	return nil
 }
 
 func (l *Listener) boardDoneHandler() error {
-	l.lock.Lock()
 	pos, err := l.ai.PickMove()
 	if err != nil {
 		err2 := l.managerInterface.NotifyError(err.Error())
@@ -131,7 +124,6 @@ func (l *Listener) boardDoneHandler() error {
 		}
 		return nil
 	}
-	l.lock.Unlock()
 
 	err = l.managerInterface.NotifyMove(pos)
 	if err != nil {
