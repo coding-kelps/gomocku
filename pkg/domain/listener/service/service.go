@@ -17,11 +17,10 @@ type Listener struct {
 	ports.Listener
 }
 
-func (l Listener) Listen() error {
+func (l *Listener) Listen() error {
 	ch := make(chan models.ManagerCommand, 10)
 
 	go l.managerInterface.Listen(ch)
-	defer close(ch)
 
 	for cmd := range ch {
 		switch cmd.CommandType() {

@@ -47,6 +47,8 @@ func NewStdio() *Stdio {
 }
 
 func (std *Stdio) Listen(ch chan<-models.ManagerCommand) error {
+	defer close(ch)
+
 	for {
 		if std.scanner.Scan() {
 			input := std.scanner.Text()
@@ -70,7 +72,7 @@ func (std *Stdio) Listen(ch chan<-models.ManagerCommand) error {
 			break
 		}
 	}
-
+ 
 	return nil
 }
 
