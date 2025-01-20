@@ -19,7 +19,6 @@ func (tcp *Tcp) Listen(ch chan<-models.ManagerCommand) error {
 	}
 }
 
-
 func handleConnection(conn net.Conn, ch chan<-models.ManagerCommand) {
 	defer conn.Close()
 
@@ -33,6 +32,10 @@ func handleConnection(conn net.Conn, ch chan<-models.ManagerCommand) {
 		}
 		
 		fmt.Printf("Received: %s\n", buffer[:n])
-		ch <- models.UnknownCommand{}
+		ch <- parseManagerCommand(buffer[:n])
 	}
+}
+
+func parseManagerCommand(_ []byte) models.ManagerCommand {
+	return models.UnknownCommand{}
 }
