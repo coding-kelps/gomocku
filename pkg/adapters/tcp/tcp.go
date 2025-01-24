@@ -2,25 +2,24 @@ package tcp
 
 import (
 	"net"
+
+	"github.com/coding-kelps/gomocku/pkg/domain/listener/ports"
 )
 
 type Tcp struct {
 	listener 			net.Listener
 	managerConnection	net.Conn
+
+	ports.ManagerInterface
 }
 
-type CreateTcpConfiguration struct {
-	localAddress 	string
-	managerAddress 	string
-}
-
-func NewTCP(cfg CreateTcpConfiguration) (*Tcp, error) {
-	listener, err := net.Listen("tcp", cfg.localAddress)
+func NewTCP(localAddress string, managerAddress string) (*Tcp, error) {
+	listener, err := net.Listen("tcp", localAddress)
 	if err != nil {
 		return nil, err
 	}
 
-	conn, err := net.Dial("tcp", cfg.managerAddress)
+	conn, err := net.Dial("tcp", managerAddress)
 	if err != nil {
 		return nil, err
 	}
