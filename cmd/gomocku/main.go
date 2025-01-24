@@ -3,17 +3,21 @@ package main
 import (
 	"fmt"
 
-	"github.com/coding-kelps/gomocku/pkg/adapters"
+	"github.com/coding-kelps/gomocku/pkg/adapters/tcp"
 	"github.com/coding-kelps/gomocku/pkg/domain/ai"
 	"github.com/coding-kelps/gomocku/pkg/domain/listener"
 )
 
 func main() {
-	stdio := adapters.NewStdio()
-	ai := ai.NewRandomAI()
-	listener := listener.NewListener(stdio, ai)
+	tcp_interface, err := tcp.NewTCP("localhost:3000", "localhost:3001")
+	if err != nil {
+		fmt.Printf("%e\n", err)
+	}
 
-	err := listener.Listen()
+	ai := ai.NewRandomAI()
+	listener := listener.NewListener(tcp_interface, ai)
+
+	err = listener.Listen()
 	if err != nil {
 		fmt.Printf("%e\n", err)
 	}
