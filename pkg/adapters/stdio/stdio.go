@@ -35,7 +35,7 @@ func NewStdio() *Stdio {
 		{"START", parseStart, regexp.MustCompile(`^START`)},
 		{"TURN", parseTurn, regexp.MustCompile(`^TURN`)},
 		{"BEGIN", parseBegin, regexp.MustCompile(`^BEGIN`)},
-		{"BOARD", parseBoard, regexp.MustCompile(`^BOARD`)},
+		{"BOARD", parseBoardBegin, regexp.MustCompile(`^BOARD`)},
 		{"BOARD", parseBoardTurn, regexp.MustCompile(`^\d+,\d+,\d`)},
 		{"BOARD", parseBoardDone, regexp.MustCompile(`^DONE`)},
 		{"INFO", parseInfo, regexp.MustCompile(`^INFO`)},

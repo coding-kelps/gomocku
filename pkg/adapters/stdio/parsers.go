@@ -30,8 +30,8 @@ func parseBegin(input string) (models.ManagerCommand, error) {
 	return models.BeginCommand{}, nil
 }
 
-func parseBoard(input string) (models.ManagerCommand, error) {
-	return models.BoardCommand{}, nil
+func parseBoardBegin(input string) (models.ManagerCommand, error) {
+	return models.BoardBeginCommand{}, nil
 }
 
 func parseBoardTurn(input string) (models.ManagerCommand, error) {
