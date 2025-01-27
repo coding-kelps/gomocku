@@ -31,12 +31,12 @@ func (c BeginCommand) CommandType() string {
 	return "begin"
 }
 
-type BoardCommand struct {
+type BoardBeginCommand struct {
 }
 
 
-func (c BoardCommand) CommandType() string {
-	return "board"
+func (c BoardBeginCommand) CommandType() string {
+	return "board_begin"
 }
 
 type BoardTurnCommand struct {
