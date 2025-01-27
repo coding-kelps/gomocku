@@ -51,8 +51,8 @@ func BeginHandler(conn net.Conn) (models.ManagerCommand, error) {
 	return models.BeginCommand{}, nil
 }
 
-func BoardHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.BoardCommand{}, nil
+func BoardBeginHandler(conn net.Conn) (models.ManagerCommand, error) {
+	return models.BoardBeginCommand{}, nil
 }
 
 func BoardTurnHandler(conn net.Conn) (models.ManagerCommand, error) {
