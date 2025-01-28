@@ -1,11 +1,13 @@
 package stdio
 
 import (
+	"fmt"
+
 	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 )
 
-func (std *StdioManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error {
-	defer close(ch)
+func (std *StdioManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction, errorsCh chan<-error) {
+	defer close(actionsCh)
 
 	for {
 		if std.scanner.Scan() {
@@ -16,20 +18,23 @@ func (std *StdioManagerInterface) Listen(ch chan<-coordModels.ManagerAction) err
 				if p.regex.MatchString(input) {
 					cmd, err := p.caller(input)
 					if err != nil {
-						return err
+						errorsCh <- err
+
+						return
 					}
-					ch <- cmd
+					actionsCh <- cmd
 					matched = true
 				}
 			}
 
 			if !matched {
-				ch <- coordModels.UnknownAction{}
+				msg := fmt.Sprintf("unknown manager action: %s", input)
+
+				errorsCh <- NewManagerActionError(msg)				
+				return
 			}
 		} else {
-			break
+			return
 		}
-	}
- 
-	return nil
+	} 
 }
