@@ -9,20 +9,6 @@ import (
 )
 
 func (tcp *Tcp) Listen(ch chan<-models.ManagerCommand) error {
-	for {
-        conn, err := tcp.listener.Accept()
-        if err != nil {
-			fmt.Println("Error:", err)
-			continue
-        }
-
-		go handleConnection(conn, ch)
-	}
-}
-
-func handleConnection(conn net.Conn, ch chan<-models.ManagerCommand) {
-	defer conn.Close()
-
 	handlers := map[byte]func(conn net.Conn)(models.ManagerCommand, error){
 		StartActionID: 			StartHandler,
 		TurnActionID: 			TurnHandler,
@@ -37,24 +23,18 @@ func handleConnection(conn net.Conn, ch chan<-models.ManagerCommand) {
 
 	for {
 		var actionID [1]byte
-		if _, err := io.ReadFull(conn, actionID[:]); err != nil {
-			if err == io.EOF {
-				fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-			} else {
-				fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-			}
-
-			return
+		if _, err := io.ReadFull(tcp.connection, actionID[:]); err != nil {
+			return err
 		}
 
 		handler, ok := handlers[actionID[0]]
 		if !ok {
             fmt.Printf("Unknown command ID %d received, closing connection", actionID[0])
 
-            return
+            return nil
 		}
 
-		action, err := handler(conn)
+		action, err := handler(tcp.connection)
         if err != nil {
             fmt.Printf("Error handling command %d: %v", actionID[0], err)
 
