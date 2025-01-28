@@ -5,5 +5,5 @@ import (
 	"github.com/coding-kelps/gomocku/pkg/adapters/tcp"
 )
 
-var NewStdio 	= stdio.NewStdio
-var NewTCP		= tcp.NewTCP
+var NewStdioManagerInterface 	= stdio.NewStdioManagerInterface
+var NewTCPManagerInterface		= tcp.NewTCPManagerInterface

@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"encoding/binary"
 
-	"github.com/coding-kelps/gomocku/pkg/domain/listener/models"
-	ai_models "github.com/coding-kelps/gomocku/pkg/domain/ai/models"
+	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
+	aiModels 	"github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )
 
-func StartHandler(conn net.Conn) (models.ManagerCommand, error) {
+func StartHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 1)
 	if _, err := io.ReadFull(conn, payload); err != nil {
 		if err == io.EOF {
@@ -22,12 +22,12 @@ func StartHandler(conn net.Conn) (models.ManagerCommand, error) {
 		return nil, err
 	}
 
-	return models.StartCommand{
+	return coordModels.StartAction{
 		Size: payload[0],
 	}, nil
 }
 
-func TurnHandler(conn net.Conn) (models.ManagerCommand, error) {
+func TurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 2)
 	if _, err := io.ReadFull(conn, payload); err != nil {
 		if err == io.EOF {
@@ -39,24 +39,24 @@ func TurnHandler(conn net.Conn) (models.ManagerCommand, error) {
 		return nil, err
 	}
 
-	return models.TurnCommand{
-		Position: ai_models.Position{
+	return coordModels.TurnAction{
+		Position: aiModels.Position{
 			X: payload[0],
 			Y: payload[1],
 		},
 	}, nil
 }
 
-func BeginHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.BeginCommand{}, nil
+func BeginHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	return coordModels.BeginAction{}, nil
 }
 
-func BoardBeginHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.BoardBeginCommand{}, nil
+func BoardBeginHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	return coordModels.BoardBeginAction{}, nil
 }
 
-func BoardTurnHandler(conn net.Conn) (models.ManagerCommand, error) {
-	var player ai_models.Player
+func BoardTurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	var player aiModels.Player
 
 	payload := make([]byte, 3)
 	if _, err := io.ReadFull(conn, payload); err != nil {
@@ -70,14 +70,14 @@ func BoardTurnHandler(conn net.Conn) (models.ManagerCommand, error) {
 	}
 
 	if payload[2] == 0 {
-		player = ai_models.Us
+		player = aiModels.Us
 	} else {
-		player = ai_models.Opponent
+		player = aiModels.Opponent
 	}
 
-	return models.BoardTurnCommand{
-		Turn: ai_models.Turn{
-			Position: ai_models.Position{
+	return coordModels.BoardTurnAction{
+		Turn: aiModels.Turn{
+			Position: aiModels.Position{
 				X: payload[0],
 				Y: payload[1],
 			},
@@ -86,11 +86,11 @@ func BoardTurnHandler(conn net.Conn) (models.ManagerCommand, error) {
 	}, nil
 }
 
-func BoardDoneHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.BoardDoneCommand{}, nil
+func BoardDoneHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	return coordModels.BoardDoneAction{}, nil
 }
 
-func InfoHandler(conn net.Conn) (models.ManagerCommand, error) {
+func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 4)
 	if _, err := io.ReadFull(conn, payload); err != nil {
 		if err == io.EOF {
@@ -115,15 +115,15 @@ func InfoHandler(conn net.Conn) (models.ManagerCommand, error) {
 		return nil, err
 	}
 
-	return models.InfoCommand{
+	return coordModels.InfoAction{
 		Str: string(payload),
 	}, nil
 }
 
-func EndHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.EndCommand{}, nil
+func EndHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	return coordModels.EndAction{}, nil
 }
 
-func AboutHandler(conn net.Conn) (models.ManagerCommand, error) {
-	return models.AboutCommand{}, nil
+func AboutHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	return coordModels.AboutAction{}, nil
 }
