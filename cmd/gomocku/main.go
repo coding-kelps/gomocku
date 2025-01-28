@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-
 func initRootCmd() *cobra.Command {
 	rootCmd := cobra.Command{
 		Use: "gomocku",
