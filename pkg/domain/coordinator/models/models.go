@@ -77,8 +77,18 @@ func (c AboutAction) ActionType() string {
 }
 
 type UnknownAction struct {
+	Msg string
 }
 
 func (c UnknownAction) ActionType() string {
 	return "unknown"
 }
+
+type ErrorAction struct {
+	Msg string
+}
+
+func (c ErrorAction) ActionType() string {
+	return "error"
+}
+

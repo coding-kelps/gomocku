@@ -3,6 +3,7 @@ package tcp
 import (
     "fmt"
     "net"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -28,18 +29,21 @@ func activeExecute(cmd *cobra.Command, args []string) {
 
     conn, err := net.Dial("tcp", address)
     if err != nil {
-        fmt.Printf("error: %v\n", err)
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
         return
     }
 	defer conn.Close()
 
-	tcp := adapters.NewTCPManagerInterface(conn)
+	tcp, err := adapters.NewTCPManagerInterface(conn)
+	if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+	}
 
 	ai := ai.NewRandomAI()
 	coord := coordinator.NewCoordinator(tcp, ai)
 	
 	err = coord.Serve()
 	if err != nil {
-		fmt.Printf("%e\n", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 }
