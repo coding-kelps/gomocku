@@ -12,6 +12,7 @@ func InitTcpCmd() *cobra.Command {
 		Short:	"run the gomocku mock AI using TCP",
 	}
 
+	tcpCmd.AddCommand(tcp.InitVersionCmd())
 	tcpCmd.AddCommand(tcp.InitActiveCmd())
 	tcpCmd.AddCommand(tcp.InitPassiveCmd())
 
