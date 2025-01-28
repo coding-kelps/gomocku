@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/coding-kelps/gomocku/cmd/gomocku/subcommands"
 
@@ -25,7 +26,7 @@ func main() {
 	rootCmd := initRootCmd()
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 }
 

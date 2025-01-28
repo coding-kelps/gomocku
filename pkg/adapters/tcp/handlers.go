@@ -3,7 +3,6 @@ package tcp
 import (
 	"io"
 	"net"
-	"fmt"
 	"encoding/binary"
 
 	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
@@ -13,12 +12,6 @@ import (
 func StartHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 1)
 	if _, err := io.ReadFull(conn, payload); err != nil {
-		if err == io.EOF {
-			fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-		} else {
-			fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-		}
-
 		return nil, err
 	}
 
@@ -30,12 +23,6 @@ func StartHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 func TurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 2)
 	if _, err := io.ReadFull(conn, payload); err != nil {
-		if err == io.EOF {
-			fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-		} else {
-			fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-		}
-
 		return nil, err
 	}
 
@@ -60,12 +47,6 @@ func BoardTurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 
 	payload := make([]byte, 3)
 	if _, err := io.ReadFull(conn, payload); err != nil {
-		if err == io.EOF {
-			fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-		} else {
-			fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-		}
-
 		return nil, err
 	}
 
@@ -93,12 +74,6 @@ func BoardDoneHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	payload := make([]byte, 4)
 	if _, err := io.ReadFull(conn, payload); err != nil {
-		if err == io.EOF {
-			fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-		} else {
-			fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-		}
-
 		return nil, err
 	}
 
@@ -106,12 +81,6 @@ func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	infoSize := binary.BigEndian.Uint32(payload[:])
 	payload = make([]byte, infoSize)
 	if _, err := io.ReadFull(conn, payload); err != nil {
-		if err == io.EOF {
-			fmt.Printf("Client %s disconnected\n", conn.RemoteAddr())
-		} else {
-			fmt.Printf("Error reading command ID from %s: %v", conn.RemoteAddr(), err)
-		}
-
 		return nil, err
 	}
 
@@ -126,4 +95,38 @@ func EndHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 
 func AboutHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	return coordModels.AboutAction{}, nil
+}
+
+func UnknownHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	payload := make([]byte, 4)
+	if _, err := io.ReadFull(conn, payload); err != nil {
+		return nil, err
+	}
+
+	msgSize := binary.BigEndian.Uint32(payload[:])
+	payload = make([]byte, msgSize)
+	if _, err := io.ReadFull(conn, payload); err != nil {
+		return nil, err
+	}
+
+	return coordModels.UnknownAction{
+		Msg: string(payload),
+	}, nil
+}
+
+func ErrorHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	payload := make([]byte, 4)
+	if _, err := io.ReadFull(conn, payload); err != nil {
+		return nil, err
+	}
+
+	msgSize := binary.BigEndian.Uint32(payload[:])
+	payload = make([]byte, msgSize)
+	if _, err := io.ReadFull(conn, payload); err != nil {
+		return nil, err
+	}
+
+	return coordModels.ErrorAction{
+		Msg: string(payload),
+	}, nil
 }

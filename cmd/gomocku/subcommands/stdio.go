@@ -2,6 +2,7 @@ package subcommands
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -28,6 +29,6 @@ func stdioExecute(_ *cobra.Command, _ []string) {
 
 	err := coord.Serve()
 	if err != nil {
-		fmt.Printf("%e\n", err)
+		fmt.Fprintf(os.Stderr, "%e\n", err)
 	}
 }

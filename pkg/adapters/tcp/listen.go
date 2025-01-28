@@ -19,6 +19,8 @@ func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error
 		InfoManagerActionID: 			InfoHandler,	
 		EndManagerActionID: 			EndHandler,
 		AboutManagerActionID: 			AboutHandler,
+		UnknownManagerActionID:			UnknownHandler,
+		ErrorManagerActionID:			ErrorHandler,
 	}
 
 	for {
@@ -29,16 +31,16 @@ func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error
 
 		handler, ok := handlers[actionID[0]]
 		if !ok {
-            fmt.Printf("Unknown command ID %d received, closing connection", actionID[0])
+			msg := fmt.Sprintf("unknown manager action with ID 0x%X", actionID[0])
 
-            return nil
+            return NewManagerActionError(msg)
 		}
 
 		action, err := handler(tcp.conn)
         if err != nil {
-            fmt.Printf("Error handling command %d: %v", actionID[0], err)
+			msg := fmt.Sprintf("processing failed of manager action with ID 0x%X: %v", actionID[0], err)
 
-            continue
+            return NewManagerActionError(msg)
         }
 
 		ch <- action
