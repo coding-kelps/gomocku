@@ -24,7 +24,7 @@ type ManagerNotifier interface {
 }
 
 type ManagerListener interface {
-	Listen(ch chan<-models.ManagerAction) error
+	Listen(actionsCh chan<-models.ManagerAction, errorsCh chan<-error)
 }
 
 type ManagerInterface interface {
