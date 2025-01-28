@@ -18,36 +18,49 @@ type Coordinator struct {
 }
 
 func (c *Coordinator) Serve() error {
-	ch := make(chan models.ManagerAction, 10)
+	actionsCh := make(chan models.ManagerAction, 10)
+	errorsCh := make(chan error)
 
-	go c.managerInterface.Listen(ch)
+	go c.managerInterface.Listen(actionsCh, errorsCh)
 
-	for cmd := range ch {
-		switch cmd.ActionType() {
-		case "start":
-			c.startHandler(cmd.(models.StartAction))
-		case "turn":
-			c.turnHandler(cmd.(models.TurnAction))
-		case "begin":
-			c.beginHandler()
-		case "board":
-			c.boardHandler()
-		case "board_turn":
-			c.boardTurnHandler(cmd.(models.BoardTurnAction))
-		case "board_done":
-			c.boardDoneHandler()
-		case "end":
-			return nil
-		case "info":
-			c.infoHandler(cmd.(models.InfoAction))
-		case "about":
-			c.aboutHandler()
-		case "unknown":
-			c.UnknownHandler()
-		}
-	}
+	for {
+        select {
+        case cmd, ok := <-actionsCh:
+            if !ok {
+                return nil
+            }
 
-	return nil
+            switch cmd.ActionType() {
+            case "start":
+                c.startHandler(cmd.(models.StartAction))
+            case "turn":
+                c.turnHandler(cmd.(models.TurnAction))
+            case "begin":
+                c.beginHandler()
+            case "board":
+                c.boardHandler()
+            case "board_turn":
+                c.boardTurnHandler(cmd.(models.BoardTurnAction))
+            case "board_done":
+                c.boardDoneHandler()
+            case "end":
+                return nil
+            case "info":
+                c.infoHandler(cmd.(models.InfoAction))
+            case "about":
+                c.aboutHandler()
+            case "unknown":
+                c.UnknownHandler()
+            }
+
+        case err, ok := <-errorsCh:
+            if !ok {
+                return nil
+            }
+			
+            return err
+        }
+    }
 }
 
 func NewCoordinator(managerInterface ports.ManagerInterface, ai aiPorts.AI) ports.Coordinator {

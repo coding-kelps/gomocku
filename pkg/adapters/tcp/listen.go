@@ -8,7 +8,9 @@ import (
 	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 )
 
-func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error {
+func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction, errorsCh chan<-error) {
+	defer close(actionsCh)
+
 	handlers := map[byte]func(conn net.Conn)(coordModels.ManagerAction, error){
 		StartManagerActionID: 			StartHandler,
 		TurnManagerActionID: 			TurnHandler,
@@ -26,23 +28,25 @@ func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error
 	for {
 		var actionID [1]byte
 		if _, err := io.ReadFull(tcp.conn, actionID[:]); err != nil {
-			return err
+			errorsCh <- err
+
+			return
 		}
 
 		handler, ok := handlers[actionID[0]]
 		if !ok {
 			msg := fmt.Sprintf("unknown manager action with ID 0x%X", actionID[0])
 
-            return NewManagerActionError(msg)
+            errorsCh <- NewManagerActionError(msg)
 		}
 
 		action, err := handler(tcp.conn)
         if err != nil {
 			msg := fmt.Sprintf("processing failed of manager action with ID 0x%X: %v", actionID[0], err)
 
-            return NewManagerActionError(msg)
+            errorsCh <- NewManagerActionError(msg)
         }
 
-		ch <- action
+		actionsCh <- action
 	}
 }
