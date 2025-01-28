@@ -8,7 +8,7 @@ import (
 
 	"github.com/coding-kelps/gomocku/pkg/adapters"
 	"github.com/coding-kelps/gomocku/pkg/domain/ai"
-	"github.com/coding-kelps/gomocku/pkg/domain/listener"
+	"github.com/coding-kelps/gomocku/pkg/domain/coordinator"
 )
 
 func InitActiveCmd() *cobra.Command {
@@ -33,12 +33,12 @@ func activeExecute(cmd *cobra.Command, args []string) {
     }
 	defer conn.Close()
 
-	tcp := adapters.NewTCP(conn)
+	tcp := adapters.NewTCPManagerInterface(conn)
 
 	ai := ai.NewRandomAI()
-	listener := listener.NewListener(tcp, ai)
+	coord := coordinator.NewCoordinator(tcp, ai)
 	
-	err = listener.Listen()
+	err = coord.Serve()
 	if err != nil {
 		fmt.Printf("%e\n", err)
 	}

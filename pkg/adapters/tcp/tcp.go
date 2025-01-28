@@ -3,7 +3,7 @@ package tcp
 import (
 	"net"
 
-	"github.com/coding-kelps/gomocku/pkg/domain/listener/ports"
+	coordPorts "github.com/coding-kelps/gomocku/pkg/domain/coordinator/ports"
 )
 
 const (
@@ -26,14 +26,14 @@ const (
 	SuggestionActionID			byte	= 0x11
 )
 
-type Tcp struct {
+type TcpManagerInterface struct {
 	conn	net.Conn
 
-	ports.ManagerInterface
+	coordPorts.ManagerInterface
 }
 
-func NewTCP(conn net.Conn) *Tcp {
-	return &Tcp{
+func NewTCPManagerInterface(conn net.Conn) *TcpManagerInterface {
+	return &TcpManagerInterface{
 		conn:	conn,
 	}
 }

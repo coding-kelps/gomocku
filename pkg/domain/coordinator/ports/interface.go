@@ -1,12 +1,12 @@
 package ports
 
 import (
-	"github.com/coding-kelps/gomocku/pkg/domain/listener/models"
-	ai_models "github.com/coding-kelps/gomocku/pkg/domain/ai/models"
+	"github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
+	aiModels "github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )
 
 type ManagerNotifier interface {
-	NotifyMove(p ai_models.Position) error
+	NotifyMove(p aiModels.Position) error
 
 	NotifyReadiness() error
 
@@ -18,13 +18,13 @@ type ManagerNotifier interface {
 
 	NotifyDebug(str string) error
 
-	NotifySuggestion(p ai_models.Position) error
+	NotifySuggestion(p aiModels.Position) error
 	
 	NotifyMetadata(metadata map[string]string) error
 }
 
 type ManagerListener interface {
-	Listen(ch chan<-models.ManagerCommand) error
+	Listen(ch chan<-models.ManagerAction) error
 }
 
 type ManagerInterface interface {
