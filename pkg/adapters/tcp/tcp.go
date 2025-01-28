@@ -7,23 +7,23 @@ import (
 )
 
 const (
-	StartActionID 				byte	= 0x01
-	TurnActionID 				byte	= 0x02
-	BeginActionID 				byte	= 0x03
-	BoardBeginActionID 			byte	= 0x04
-	BoardTurnActionID 			byte	= 0x05
-	BoardEndActionID 			byte	= 0x06
-	InfoActionID 				byte	= 0x07
-	EndActionID 				byte	= 0x08
-	AboutActionID 				byte	= 0x09
-	ReadyActionID 				byte	= 0x0A
-	PlayActionID 				byte	= 0x0B
-	PlayerDescriptionActionID 	byte	= 0x0C
-	UnknownActionID				byte	= 0x0D
-	ErrorActionID				byte	= 0x0E
-	MessageActionID				byte	= 0x0F
-	DebugActionID				byte	= 0x10
-	SuggestionActionID			byte	= 0x11
+	StartManagerActionID 				byte	= 0x01
+	TurnManagerActionID 				byte	= 0x02
+	BeginManagerActionID 				byte	= 0x03
+	BoardBeginManagerActionID 			byte	= 0x04
+	BoardTurnManagerActionID 			byte	= 0x05
+	BoardEndManagerActionID 			byte	= 0x06
+	InfoManagerActionID 				byte	= 0x07
+	EndManagerActionID					byte	= 0x08
+	AboutManagerActionID 				byte	= 0x09
+	ReadyPlayerActionID 				byte	= 0x0A
+	PlayPlayerActionID					byte	= 0x0B
+	PlayerDescriptionPlayerActionID		byte	= 0x0C
+	UnknownPlayerActionID				byte	= 0x0D
+	ErrorPlayerActionID					byte	= 0x0E
+	MessagePlayerActionID				byte	= 0x0F
+	DebugPlayerActionID					byte	= 0x10
+	SuggestionPlayerActionID			byte	= 0x11
 )
 
 type TcpManagerInterface struct {
