@@ -1,0 +1,5 @@
+-   Rename Command into Action
+-   Enable configuration through CLI
+-   Enable active connection to manager
+-   Add troubleshooting actions handlers
+-   Enable logging with zerolog

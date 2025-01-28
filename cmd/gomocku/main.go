@@ -3,22 +3,32 @@ package main
 import (
 	"fmt"
 
-	"github.com/coding-kelps/gomocku/pkg/adapters/tcp"
-	"github.com/coding-kelps/gomocku/pkg/domain/ai"
-	"github.com/coding-kelps/gomocku/pkg/domain/listener"
+	"github.com/coding-kelps/gomocku/cmd/gomocku/subcommands"
+
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	tcp_interface, err := tcp.NewTCP("localhost:9000")
-	if err != nil {
-		fmt.Printf("%e\n", err)
+
+
+func initRootCmd() *cobra.Command {
+	rootCmd := cobra.Command{
+		Use: "gomocku",
+		Short: "gomocku - a testing client for the gomokurs environment",
+		Version: "0.1.0",
 	}
 
-	ai := ai.NewRandomAI()
-	listener := listener.NewListener(tcp_interface, ai)
+	rootCmd.AddCommand(subcommands.InitStdioCmd())
+	rootCmd.AddCommand(subcommands.InitTcpCmd())
 
-	err = listener.Listen()
-	if err != nil {
-		fmt.Printf("%e\n", err)
+	return &rootCmd
+}
+
+func main() {
+	rootCmd := initRootCmd()
+
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Printf("%v\n", err)
 	}
 }
+
+
