@@ -38,11 +38,7 @@ func (c *Coordinator) Serve() error {
             case "begin":
                 c.beginHandler()
             case "board":
-                c.boardHandler()
-            case "board_turn":
-                c.boardTurnHandler(cmd.(models.BoardTurnAction))
-            case "board_done":
-                c.boardDoneHandler()
+                c.boardHandler(cmd.(models.BoardAction))
             case "end":
                 return nil
             case "info":

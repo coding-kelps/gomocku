@@ -12,7 +12,7 @@ type StartAction struct {
 	Size uint8
 }
 
-func (c StartAction) ActionType() string {
+func (a StartAction) ActionType() string {
 	return "start"
 }
 
@@ -20,59 +20,44 @@ type TurnAction struct {
 	Position aiModels.Position
 }
 
-func (c TurnAction) ActionType() string {
+func (a TurnAction) ActionType() string {
 	return "turn"
 }
 
 type BeginAction struct {
 }
 
-func (c BeginAction) ActionType() string {
+func (a BeginAction) ActionType() string {
 	return "begin"
 }
 
-type BoardBeginAction struct {
+type BoardAction struct {
+	Turns []aiModels.Turn
 }
 
-
-func (c BoardBeginAction) ActionType() string {
-	return "board_begin"
-}
-
-type BoardTurnAction struct {
-	Turn aiModels.Turn
-}
-
-func (c BoardTurnAction) ActionType() string {
-	return "board_turn"
-}
-
-type BoardDoneAction struct {
-}
-
-func (c BoardDoneAction) ActionType() string {
-	return "board_done"
+func (a BoardAction) ActionType() string {
+	return "board"
 }
 
 type InfoAction struct {
 	Str string
 }
 
-func (c InfoAction) ActionType() string {
+func (a InfoAction) ActionType() string {
 	return "info"
 }
 
 type EndAction struct {
 }
 
-func (c EndAction) ActionType() string {
+func (a EndAction) ActionType() string {
 	return "end"
 }
 
 type AboutAction struct {
 }
 
-func (c AboutAction) ActionType() string {
+func (a AboutAction) ActionType() string {
 	return "about"
 }
 
@@ -80,7 +65,7 @@ type UnknownAction struct {
 	Msg string
 }
 
-func (c UnknownAction) ActionType() string {
+func (a UnknownAction) ActionType() string {
 	return "unknown"
 }
 
@@ -88,7 +73,7 @@ type ErrorAction struct {
 	Msg string
 }
 
-func (c ErrorAction) ActionType() string {
+func (a ErrorAction) ActionType() string {
 	return "error"
 }
 

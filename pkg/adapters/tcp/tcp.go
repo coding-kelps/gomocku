@@ -18,26 +18,24 @@ const (
 	StartManagerActionID 				byte	= 0x01
 	TurnManagerActionID 				byte	= 0x02
 	BeginManagerActionID 				byte	= 0x03
-	BoardBeginManagerActionID 			byte	= 0x04
-	BoardTurnManagerActionID 			byte	= 0x05
-	BoardEndManagerActionID 			byte	= 0x06
-	InfoManagerActionID 				byte	= 0x07
-	EndManagerActionID					byte	= 0x08
-	AboutManagerActionID 				byte	= 0x09
-	UnknownManagerActionID				byte	= 0x0A
-	ErrorManagerActionID				byte	= 0x0B
+	BoardManagerActionID 				byte	= 0x04
+	InfoManagerActionID 				byte	= 0x05
+	EndManagerActionID					byte	= 0x06
+	AboutManagerActionID 				byte	= 0x07
+	UnknownManagerActionID				byte	= 0x08
+	ErrorManagerActionID				byte	= 0x09
 
 	// Actions that can be send from the player to the manager.
 
-	ProtocolVersionPlayerActionID		byte	= 0x0C
-	ReadyPlayerActionID 				byte	= 0x0D
-	PlayPlayerActionID					byte	= 0x0E
-	PlayerDescriptionPlayerActionID		byte	= 0x0F
-	UnknownPlayerActionID				byte	= 0x10
-	ErrorPlayerActionID					byte	= 0x11
-	MessagePlayerActionID				byte	= 0x12
-	DebugPlayerActionID					byte	= 0x13
-	SuggestionPlayerActionID			byte	= 0x14
+	ProtocolVersionPlayerActionID		byte	= 0x0A
+	ReadyPlayerActionID 				byte	= 0x0B
+	PlayPlayerActionID					byte	= 0x0C
+	PlayerDescriptionPlayerActionID		byte	= 0x0D
+	UnknownPlayerActionID				byte	= 0x0E
+	ErrorPlayerActionID					byte	= 0x0F
+	MessagePlayerActionID				byte	= 0x10
+	DebugPlayerActionID					byte	= 0x11
+	SuggestionPlayerActionID			byte	= 0x12
 )
 
 type TcpManagerInterface struct {
