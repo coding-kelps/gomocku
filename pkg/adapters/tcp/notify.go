@@ -10,14 +10,14 @@ import (
 
 func (tcp *Tcp) NotifyReadiness() error {
 	data := []byte{ReadyActionID}
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
 
 func (tcp *Tcp) NotifyMove(p ai_models.Position) error {
 	data := []byte{PlayActionID, p.X, p.Y}
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 
 	return err
 }
@@ -36,14 +36,14 @@ func (tcp *Tcp) NotifyMetadata(metadata map[string]string) error {
     binary.BigEndian.PutUint32(metadata_len, uint32(len(ascii_metadata)))
 
 	data := append([]byte{PlayerDescriptionActionID}, append(metadata_len, ascii_metadata...)...)
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
 
 func (tcp *Tcp) NotifyUnknown() error {
 	data := []byte{UnknownActionID}
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
@@ -53,7 +53,7 @@ func (tcp *Tcp) NotifyError(str string) error {
     binary.BigEndian.PutUint32(str_len, uint32(len(str)))
 
 	data := append([]byte{ErrorActionID}, append(str_len, []byte(str)...)...)
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
@@ -63,7 +63,7 @@ func (tcp *Tcp) NotifyMessage(str string) error {
     binary.BigEndian.PutUint32(str_len, uint32(len(str)))
 
 	data := append([]byte{MessageActionID}, append(str_len, []byte(str)...)...)
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
@@ -73,14 +73,14 @@ func (tcp *Tcp) NotifyDebug(str string) error {
     binary.BigEndian.PutUint32(str_len, uint32(len(str)))
 
 	data := append([]byte{DebugActionID}, append(str_len, []byte(str)...)...)
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }
 
 func (tcp *Tcp) NotifySuggestion(p ai_models.Position) error {
 	data := []byte{SuggestionActionID, p.X, p.Y}
-	_, err := tcp.managerConnection.Write(data)
+	_, err := tcp.connection.Write(data)
 	
 	return err
 }

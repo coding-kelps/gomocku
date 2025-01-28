@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	tcp_interface, err := tcp.NewTCP("localhost:3000", "localhost:3001")
+	tcp_interface, err := tcp.NewTCP("localhost:9000")
 	if err != nil {
 		fmt.Printf("%e\n", err)
 	}
