@@ -28,31 +28,33 @@ const (
 
 type Tcp struct {
 	listener 			net.Listener
-	managerConnection	net.Conn
+	connection			net.Conn
 
 	ports.ManagerInterface
 }
 
-func NewTCP(localAddress string, managerAddress string) (*Tcp, error) {
+func NewTCP(localAddress string) (*Tcp, error) {
 	listener, err := net.Listen("tcp", localAddress)
 	if err != nil {
 		return nil, err
 	}
 
-	conn, err := net.Dial("tcp", managerAddress)
-	if err != nil {
-		return nil, err
-	}
+    for {
+        conn, err := listener.Accept()
+        if err != nil {
+            continue
+        }
 
-	return &Tcp{
-		listener:			listener,
-		managerConnection:	conn,
-	}, nil
+		return &Tcp{
+			listener:			listener,
+			connection:			conn,
+		}, nil
+    }
 }
 
 func (tcp *Tcp) Close() error {
-	if tcp.managerConnection != nil {
-		err := tcp.managerConnection.Close()
+	if tcp.connection != nil {
+		err := tcp.connection.Close()
 		if err != nil {
 			return err
 		}
