@@ -27,45 +27,13 @@ const (
 )
 
 type Tcp struct {
-	listener 			net.Listener
-	connection			net.Conn
+	conn	net.Conn
 
 	ports.ManagerInterface
 }
 
-func NewTCP(localAddress string) (*Tcp, error) {
-	listener, err := net.Listen("tcp", localAddress)
-	if err != nil {
-		return nil, err
+func NewTCP(conn net.Conn) *Tcp {
+	return &Tcp{
+		conn:	conn,
 	}
-
-    for {
-        conn, err := listener.Accept()
-        if err != nil {
-            continue
-        }
-
-		return &Tcp{
-			listener:			listener,
-			connection:			conn,
-		}, nil
-    }
-}
-
-func (tcp *Tcp) Close() error {
-	if tcp.connection != nil {
-		err := tcp.connection.Close()
-		if err != nil {
-			return err
-		}
-	}
-
-	if tcp.listener != nil {
-		err := tcp.listener.Close()
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
