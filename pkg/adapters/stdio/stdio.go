@@ -28,15 +28,13 @@ func NewStdioManagerInterface() *StdioManagerInterface {
 	}
 
 	s.parsers = []parser{
-		{"START", 	parseStart,			regexp.MustCompile(`^START`)},
-		{"TURN", 	parseTurn, 			regexp.MustCompile(`^TURN`)},
-		{"BEGIN", 	parseBegin, 		regexp.MustCompile(`^BEGIN`)},
-		{"BOARD", 	parseBoardBegin,	regexp.MustCompile(`^BOARD`)},
-		{"BOARD", 	parseBoardTurn,		regexp.MustCompile(`^\d+,\d+,\d`)},
-		{"BOARD", 	parseBoardDone,		regexp.MustCompile(`^DONE`)},
-		{"INFO", 	parseInfo,			regexp.MustCompile(`^INFO`)},
-		{"END", 	parseEnd,			regexp.MustCompile(`^END`)},
-		{"ABOUT",	parseAbout,			regexp.MustCompile(`^ABOUT`)},
+		{"START", 	s.parseStart,			regexp.MustCompile(`^START`)},
+		{"TURN", 	s.parseTurn, 			regexp.MustCompile(`^TURN`)},
+		{"BEGIN", 	s.parseBegin, 			regexp.MustCompile(`^BEGIN`)},
+		{"BOARD", 	s.parseBoardBegin,		regexp.MustCompile(`^BOARD`)},
+		{"INFO", 	s.parseInfo,			regexp.MustCompile(`^INFO`)},
+		{"END", 	s.parseEnd,				regexp.MustCompile(`^END`)},
+		{"ABOUT",	s.parseAbout,			regexp.MustCompile(`^ABOUT`)},
 	}
 
 	return &s

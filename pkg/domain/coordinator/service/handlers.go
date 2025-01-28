@@ -89,24 +89,18 @@ func (c *Coordinator) beginHandler() error {
 	return nil
 }
 
-func (c *Coordinator) boardHandler() error {
-	return nil
-}
-
-func (c *Coordinator) boardTurnHandler(a models.BoardTurnAction) error {
-	err := c.ai.RegisterMove(a.Turn.Position, aiModels.CellStatus(a.Turn.Player))
-	if err != nil {
-		err2 := c.managerInterface.NotifyError(err.Error())
-		if err2 != nil {
-			return err2
+func (c *Coordinator) boardHandler(a models.BoardAction) error {
+	for _, t := range a.Turns {
+		err := c.ai.RegisterMove(t.Position, aiModels.CellStatus(t.Player))
+		if err != nil {
+			err2 := c.managerInterface.NotifyError(err.Error())
+			if err2 != nil {
+				return err2
+			}
+			return nil
 		}
-		return nil
 	}
 
-	return nil
-}
-
-func (c *Coordinator) boardDoneHandler() error {
 	pos, err := c.ai.PickMove()
 	if err != nil {
 		err2 := c.managerInterface.NotifyError(err.Error())

@@ -38,37 +38,38 @@ func BeginHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	return coordModels.BeginAction{}, nil
 }
 
-func BoardBeginHandler(conn net.Conn) (coordModels.ManagerAction, error) {
-	return coordModels.BoardBeginAction{}, nil
-}
+func BoardHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+	board := coordModels.BoardAction{}
 
-func BoardTurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
-	var player aiModels.Player
-
-	payload := make([]byte, 3)
+	payload := make([]byte, 4)
 	if _, err := io.ReadFull(conn, payload); err != nil {
 		return nil, err
 	}
 
-	if payload[2] == 0 {
-		player = aiModels.Us
-	} else {
-		player = aiModels.Opponent
+	nbTurn := binary.BigEndian.Uint32(payload[:])
+	payload = make([]byte, nbTurn * 3)
+	if _, err := io.ReadFull(conn, payload); err != nil {
+		return nil, err
 	}
 
-	return coordModels.BoardTurnAction{
-		Turn: aiModels.Turn{
+	for i := uint32(0); i < nbTurn; i += 3 {
+		turn := aiModels.Turn{
 			Position: aiModels.Position{
 				X: payload[0],
 				Y: payload[1],
 			},
-			Player: player,
-		},
-	}, nil
-}
+		}
 
-func BoardDoneHandler(conn net.Conn) (coordModels.ManagerAction, error) {
-	return coordModels.BoardDoneAction{}, nil
+		if payload[2] == 0 {
+			turn.Player = aiModels.Us
+		} else {
+			turn.Player = aiModels.Opponent
+		}
+
+		board.Turns = append(board.Turns, turn)
+	}
+
+	return board, nil
 }
 
 func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
