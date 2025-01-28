@@ -10,15 +10,15 @@ import (
 
 func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error {
 	handlers := map[byte]func(conn net.Conn)(coordModels.ManagerAction, error){
-		StartActionID: 			StartHandler,
-		TurnActionID: 			TurnHandler,
-		BeginActionID: 			BeginHandler,
-		BoardBeginActionID: 	BoardBeginHandler,
-		BoardTurnActionID: 		BoardTurnHandler,
-		BoardEndActionID: 		BoardDoneHandler,
-		InfoActionID: 			InfoHandler,	
-		EndActionID: 			EndHandler,
-		AboutActionID: 			AboutHandler,
+		StartManagerActionID: 			StartHandler,
+		TurnManagerActionID: 			TurnHandler,
+		BeginManagerActionID: 			BeginHandler,
+		BoardBeginManagerActionID:		BoardBeginHandler,
+		BoardTurnManagerActionID: 		BoardTurnHandler,
+		BoardEndManagerActionID: 		BoardDoneHandler,
+		InfoManagerActionID: 			InfoHandler,	
+		EndManagerActionID: 			EndHandler,
+		AboutManagerActionID: 			AboutHandler,
 	}
 
 	for {
