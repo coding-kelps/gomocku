@@ -1,62 +1,62 @@
 package stdio
 
 import (
-	"github.com/coding-kelps/gomocku/pkg/domain/listener/models"
+	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 )
 
-func parseStart(input string) (models.ManagerCommand, error) {
+func parseStart(input string) (coordModels.ManagerAction, error) {
 	size, err := parseStartArgs(input)
 	if err != nil {
-		return models.StartCommand{}, err
+		return coordModels.StartAction{}, err
 	}
 
-	return models.StartCommand{
+	return coordModels.StartAction{
 		Size: size,
 	}, nil
 }
 
-func parseTurn(input string) (models.ManagerCommand, error) {
+func parseTurn(input string) (coordModels.ManagerAction, error) {
 	p, err := parseTurnArgs(input)
 	if err != nil {
-		return models.TurnCommand{}, err
+		return coordModels.TurnAction{}, err
 	}
 
-	return models.TurnCommand{
+	return coordModels.TurnAction{
 		Position: p,
 	}, err
 }
 
-func parseBegin(input string) (models.ManagerCommand, error) {
-	return models.BeginCommand{}, nil
+func parseBegin(input string) (coordModels.ManagerAction, error) {
+	return coordModels.BeginAction{}, nil
 }
 
-func parseBoardBegin(input string) (models.ManagerCommand, error) {
-	return models.BoardBeginCommand{}, nil
+func parseBoardBegin(input string) (coordModels.ManagerAction, error) {
+	return coordModels.BoardBeginAction{}, nil
 }
 
-func parseBoardTurn(input string) (models.ManagerCommand, error) {
+func parseBoardTurn(input string) (coordModels.ManagerAction, error) {
 	t, err := parseBoardTurnArgs(input)
 	if err != nil {
-		return models.BoardTurnCommand{}, err
+		return coordModels.BoardTurnAction{}, err
 	}
 
-	return models.BoardTurnCommand{
+	return coordModels.BoardTurnAction{
 		Turn: t,
 	}, nil
 }
 
-func parseBoardDone(input string) (models.ManagerCommand, error) {
-	return models.BoardDoneCommand{}, nil
+func parseBoardDone(input string) (coordModels.ManagerAction, error) {
+	return coordModels.BoardDoneAction{}, nil
 }
 
-func parseInfo(input string) (models.ManagerCommand, error) {
-	return models.InfoCommand{}, nil
+func parseInfo(input string) (coordModels.ManagerAction, error) {
+	return coordModels.InfoAction{}, nil
 }
 
-func parseEnd(input string) (models.ManagerCommand, error) {
-	return models.EndCommand{}, nil
+func parseEnd(input string) (coordModels.ManagerAction, error) {
+	return coordModels.EndAction{}, nil
 }
 
-func parseAbout(input string) (models.ManagerCommand, error) {
-	return models.AboutCommand{}, nil
+func parseAbout(input string) (coordModels.ManagerAction, error) {
+	return coordModels.AboutAction{}, nil
 }

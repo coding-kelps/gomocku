@@ -5,11 +5,11 @@ import (
 	"io"
 	"net"
 
-	"github.com/coding-kelps/gomocku/pkg/domain/listener/models"
+	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 )
 
-func (tcp *Tcp) Listen(ch chan<-models.ManagerCommand) error {
-	handlers := map[byte]func(conn net.Conn)(models.ManagerCommand, error){
+func (tcp *TcpManagerInterface) Listen(ch chan<-coordModels.ManagerAction) error {
+	handlers := map[byte]func(conn net.Conn)(coordModels.ManagerAction, error){
 		StartActionID: 			StartHandler,
 		TurnActionID: 			TurnHandler,
 		BeginActionID: 			BeginHandler,
@@ -23,7 +23,7 @@ func (tcp *Tcp) Listen(ch chan<-models.ManagerCommand) error {
 
 	for {
 		var actionID [1]byte
-		if _, err := io.ReadFull(tcp.connection, actionID[:]); err != nil {
+		if _, err := io.ReadFull(tcp.conn, actionID[:]); err != nil {
 			return err
 		}
 
@@ -34,7 +34,7 @@ func (tcp *Tcp) Listen(ch chan<-models.ManagerCommand) error {
             return nil
 		}
 
-		action, err := handler(tcp.connection)
+		action, err := handler(tcp.conn)
         if err != nil {
             fmt.Printf("Error handling command %d: %v", actionID[0], err)
 

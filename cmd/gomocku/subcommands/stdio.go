@@ -7,7 +7,7 @@ import (
 
 	"github.com/coding-kelps/gomocku/pkg/adapters"
 	"github.com/coding-kelps/gomocku/pkg/domain/ai"
-	"github.com/coding-kelps/gomocku/pkg/domain/listener"
+	"github.com/coding-kelps/gomocku/pkg/domain/coordinator"
 )
 
 func InitStdioCmd() *cobra.Command {
@@ -21,12 +21,12 @@ func InitStdioCmd() *cobra.Command {
 }
 
 func stdioExecute(_ *cobra.Command, _ []string) {
-	stdio := adapters.NewStdio()
+	stdio := adapters.NewStdioManagerInterface()
 
 	ai := ai.NewRandomAI()
-	listener := listener.NewListener(stdio, ai)
+	coord := coordinator.NewCoordinator(stdio, ai)
 
-	err := listener.Listen()
+	err := coord.Serve()
 	if err != nil {
 		fmt.Printf("%e\n", err)
 	}
