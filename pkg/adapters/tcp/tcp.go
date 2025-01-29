@@ -58,7 +58,11 @@ func NewTCPManagerInterface(conn net.Conn) (*TcpManagerInterface, error) {
 }
 
 func (tcp *TcpManagerInterface) checkProtocolCompatibilty() error {
-	data := []byte(ProtocolVersion)
+	protocolVersionAsBytes := []byte(ProtocolVersion)
+	protocolVersionAsBytesLenAsBytes := make([]byte, 4)
+	binary.BigEndian.PutUint32(protocolVersionAsBytesLenAsBytes, uint32(len(protocolVersionAsBytes)))
+
+	data := append([]byte{ProtocolVersionPlayerActionID}, append(protocolVersionAsBytesLenAsBytes, []byte(ProtocolVersion)...)...)
 	if _, err := tcp.conn.Write(data); err != nil {
 		return err
 	}
