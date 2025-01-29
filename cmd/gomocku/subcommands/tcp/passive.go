@@ -41,6 +41,8 @@ func passiveExecute(cmd *cobra.Command, args []string) {
 		tcp, err := adapters.NewTCPManagerInterface(conn)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+
+			return
 		}
 
 		ai := ai.NewRandomAI()
