@@ -2,16 +2,15 @@ package tcp
 
 import (
 	"io"
-	"net"
 	"encoding/binary"
 
 	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 	aiModels 	"github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )
 
-func StartHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) StartHandler() (coordModels.ManagerAction, error) {
 	payload := make([]byte, 1)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
@@ -20,9 +19,9 @@ func StartHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	}, nil
 }
 
-func TurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) TurnHandler() (coordModels.ManagerAction, error) {
 	payload := make([]byte, 2)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
@@ -34,21 +33,21 @@ func TurnHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	}, nil
 }
 
-func BeginHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) BeginHandler() (coordModels.ManagerAction, error) {
 	return coordModels.BeginAction{}, nil
 }
 
-func BoardHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) BoardHandler() (coordModels.ManagerAction, error) {
 	board := coordModels.BoardAction{}
 
 	payload := make([]byte, 4)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
 	nbTurn := binary.BigEndian.Uint32(payload[:])
 	payload = make([]byte, nbTurn * 3)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
@@ -72,16 +71,16 @@ func BoardHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	return board, nil
 }
 
-func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) InfoHandler() (coordModels.ManagerAction, error) {
 	payload := make([]byte, 4)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
 
 	infoSize := binary.BigEndian.Uint32(payload[:])
 	payload = make([]byte, infoSize)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
@@ -90,23 +89,23 @@ func InfoHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	}, nil
 }
 
-func EndHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) EndHandler() (coordModels.ManagerAction, error) {
 	return coordModels.EndAction{}, nil
 }
 
-func AboutHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) AboutHandler() (coordModels.ManagerAction, error) {
 	return coordModels.AboutAction{}, nil
 }
 
-func UnknownHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) UnknownHandler() (coordModels.ManagerAction, error) {
 	payload := make([]byte, 4)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
 	msgSize := binary.BigEndian.Uint32(payload[:])
 	payload = make([]byte, msgSize)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
@@ -115,15 +114,15 @@ func UnknownHandler(conn net.Conn) (coordModels.ManagerAction, error) {
 	}, nil
 }
 
-func ErrorHandler(conn net.Conn) (coordModels.ManagerAction, error) {
+func (tcp *TcpManagerInterface) ErrorHandler() (coordModels.ManagerAction, error) {
 	payload := make([]byte, 4)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 
 	msgSize := binary.BigEndian.Uint32(payload[:])
 	payload = make([]byte, msgSize)
-	if _, err := io.ReadFull(conn, payload); err != nil {
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
 		return nil, err
 	}
 

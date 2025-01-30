@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/rs/zerolog"
+
+	"github.com/coding-kelps/gomocku/cmd/gomocku/context"
 
 	"github.com/coding-kelps/gomocku/pkg/adapters"
 	"github.com/coding-kelps/gomocku/pkg/domain/ai"
@@ -19,17 +22,28 @@ func InitPassiveCmd() *cobra.Command {
 		Run: 	passiveExecute,
 	}
 
-	passiveCmd.Flags().String("address", "localhost:49912", "The listening address")
+	passiveCmd.Flags().String("address", "localhost:49912", "the listening address")
 
 	return &passiveCmd
 }
 
 func passiveExecute(cmd *cobra.Command, args []string) {
+	ctx := cmd.Context()
+	logger, ok := ctx.Value(context.LoggerKey).(zerolog.Logger)
+	if !ok {
+		fmt.Fprintf(os.Stderr, "FATAL - could not retrieve logger\n")
+
+		return
+	}
 	address, _ := cmd.Flags().GetString("address")
 
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+        logger.Fatal().
+			Err(err).
+			Msg("manager tcp dialing")
+
+		return
 	}
 
     for {
@@ -37,23 +51,28 @@ func passiveExecute(cmd *cobra.Command, args []string) {
         if err != nil {
             continue
         }
+		defer conn.Close()
 
-		tcp, err := adapters.NewTCPManagerInterface(conn)
+		tcp, err := adapters.NewTCPManagerInterface(conn, logger)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			logger.Fatal().
+				Err(err).
+				Msg("tcp manager interface creation failed")
+			return
+		}
+
+		ai := ai.NewRandomAI(logger)
+		coord := coordinator.NewCoordinator(tcp, ai, logger)
+	
+		err = coord.Serve()
+		if err != nil {
+			logger.Fatal().
+				Err(err).
+				Msg("coordinator failed")
 
 			return
 		}
 
-		ai := ai.NewRandomAI()
-		coord := coordinator.NewCoordinator(tcp, ai)
-	
-		err = coord.Serve()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-		}
-
-		conn.Close()
 		return
 	}
 }
