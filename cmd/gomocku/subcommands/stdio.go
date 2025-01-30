@@ -5,6 +5,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/rs/zerolog"
+
+	"github.com/coding-kelps/gomocku/cmd/gomocku/context"
 
 	"github.com/coding-kelps/gomocku/pkg/adapters"
 	"github.com/coding-kelps/gomocku/pkg/domain/ai"
@@ -21,14 +24,26 @@ func InitStdioCmd() *cobra.Command {
 	return &stdioCmd
 }
 
-func stdioExecute(_ *cobra.Command, _ []string) {
-	stdio := adapters.NewStdioManagerInterface()
+func stdioExecute(cmd *cobra.Command, _ []string) {
+	ctx := cmd.Context()
+	logger, ok := ctx.Value(context.LoggerKey).(zerolog.Logger)
+	if !ok {
+		fmt.Fprintf(os.Stderr, "FATAL - could not retrieve logger\n")
 
-	ai := ai.NewRandomAI()
-	coord := coordinator.NewCoordinator(stdio, ai)
+		return
+	}
+
+	stdio := adapters.NewStdioManagerInterface(logger)
+
+	ai := ai.NewRandomAI(logger)
+	coord := coordinator.NewCoordinator(stdio, ai, logger)
 
 	err := coord.Serve()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%e\n", err)
+        logger.Fatal().
+			Err(err).
+			Msg("coordinator failed")
+		
+		return
 	}
 }

@@ -3,7 +3,6 @@ package tcp
 import (
 	"fmt"
 	"io"
-	"net"
 
 	coordModels "github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 )
@@ -11,16 +10,16 @@ import (
 func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction, errorsCh chan<-error) {
 	defer close(actionsCh)
 
-	handlers := map[byte]func(conn net.Conn)(coordModels.ManagerAction, error){
-		StartManagerActionID: 			StartHandler,
-		TurnManagerActionID: 			TurnHandler,
-		BeginManagerActionID: 			BeginHandler,
-		BoardManagerActionID:			BoardHandler,
-		InfoManagerActionID: 			InfoHandler,	
-		EndManagerActionID: 			EndHandler,
-		AboutManagerActionID: 			AboutHandler,
-		UnknownManagerActionID:			UnknownHandler,
-		ErrorManagerActionID:			ErrorHandler,
+	handlers := map[byte]func()(coordModels.ManagerAction, error){
+		StartManagerActionID: 			tcp.StartHandler,
+		TurnManagerActionID: 			tcp.TurnHandler,
+		BeginManagerActionID: 			tcp.BeginHandler,
+		BoardManagerActionID:			tcp.BoardHandler,
+		InfoManagerActionID: 			tcp.InfoHandler,	
+		EndManagerActionID: 			tcp.EndHandler,
+		AboutManagerActionID: 			tcp.AboutHandler,
+		UnknownManagerActionID:			tcp.UnknownHandler,
+		ErrorManagerActionID:			tcp.ErrorHandler,
 	}
 
 	for {
@@ -38,7 +37,7 @@ func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction
             errorsCh <- NewManagerActionError(msg)
 		}
 
-		action, err := handler(tcp.conn)
+		action, err := handler()
         if err != nil {
 			msg := fmt.Sprintf("processing failed of manager action with ID 0x%X: %v", actionID[0], err)
 

@@ -6,6 +6,8 @@ import (
 	"net"
 	"encoding/binary"
 
+	"github.com/rs/zerolog"
+
 	coordPorts "github.com/coding-kelps/gomocku/pkg/domain/coordinator/ports"
 )
 
@@ -40,13 +42,15 @@ const (
 
 type TcpManagerInterface struct {
 	conn	net.Conn
+	logger	zerolog.Logger
 
 	coordPorts.ManagerInterface
 }
 
-func NewTCPManagerInterface(conn net.Conn) (*TcpManagerInterface, error) {
+func NewTCPManagerInterface(conn net.Conn, logger zerolog.Logger) (*TcpManagerInterface, error) {
 	tcp := TcpManagerInterface{
 		conn:	conn,
+		logger:	logger,
 	}
 
 	err := tcp.checkProtocolCompatibilty()
