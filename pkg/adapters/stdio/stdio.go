@@ -5,6 +5,8 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/rs/zerolog"
+
 	coordModels	"github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
 	coordPorts	"github.com/coding-kelps/gomocku/pkg/domain/coordinator/ports"	
 )
@@ -12,6 +14,7 @@ import (
 type StdioManagerInterface struct {
 	parsers []parser
 	scanner  *bufio.Scanner
+	logger	zerolog.Logger
 
 	coordPorts.ManagerInterface
 }
@@ -22,9 +25,10 @@ type parser struct {
 	regex  *regexp.Regexp
 }	
 
-func NewStdioManagerInterface() *StdioManagerInterface {
+func NewStdioManagerInterface(logger zerolog.Logger) *StdioManagerInterface {
 	s := StdioManagerInterface{
-		scanner: bufio.NewScanner(os.Stdin),
+		scanner:	bufio.NewScanner(os.Stdin),
+		logger:		logger,
 	}
 
 	s.parsers = []parser{
