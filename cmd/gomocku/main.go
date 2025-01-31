@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"context"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/rs/zerolog"
@@ -42,11 +43,15 @@ func rootCmdPersistentPreRunE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid log level '%s', defaulting to info: %v", logLevel, err)
 	}
 
-	logger := zerolog.New(os.Stderr).
+	consoleWriter := zerolog.ConsoleWriter{
+		Out:		os.Stderr,
+		TimeFormat: time.RFC3339,
+	}
+
+	logger := zerolog.New(consoleWriter).
 		Level(lvl).
 		With().
 		Timestamp().
-		Caller().
 		Logger()
 
 	ctx := context.WithValue(cmd.Context(), gomockuContext.LoggerKey, logger)
