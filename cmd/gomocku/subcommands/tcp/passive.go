@@ -53,16 +53,17 @@ func passiveExecute(cmd *cobra.Command, args []string) {
         }
 		defer conn.Close()
 
-		tcp, err := adapters.NewTCPManagerInterface(conn, logger)
+		tcp, err := adapters.NewTCPManagerInterface(conn, logger.With().Str("adapter", "tcp").Logger())
 		if err != nil {
 			logger.Fatal().
 				Err(err).
 				Msg("tcp manager interface creation failed")
+			
 			return
 		}
 
-		ai := ai.NewRandomAI(logger)
-		coord := coordinator.NewCoordinator(tcp, ai, logger)
+		ai := ai.NewRandomAI(logger.With().Str("service", "ai").Logger())
+		coord := coordinator.NewCoordinator(tcp, ai, logger.With().Str("service", "coordinator").Logger())
 	
 		err = coord.Serve()
 		if err != nil {
