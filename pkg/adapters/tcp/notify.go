@@ -15,7 +15,7 @@ func (tcp *TcpManagerInterface) NotifyReadiness() error {
 	return err
 }
 
-func (tcp *TcpManagerInterface) NotifyMove(p aiModels.Position) error {
+func (tcp *TcpManagerInterface) NotifyMove(p aiModels.Position) error {	
 	data := []byte{PlayPlayerActionID, p.X, p.Y}
 	_, err := tcp.conn.Write(data)
 
