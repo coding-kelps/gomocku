@@ -13,7 +13,14 @@ type StartAction struct {
 }
 
 func (a StartAction) ActionType() string {
-	return "start"
+	return "START"
+}
+
+type RestartAction struct {
+}
+
+func (a RestartAction) ActionType() string {
+	return "RESTART"
 }
 
 type TurnAction struct {
@@ -21,14 +28,14 @@ type TurnAction struct {
 }
 
 func (a TurnAction) ActionType() string {
-	return "turn"
+	return "TURN"
 }
 
 type BeginAction struct {
 }
 
 func (a BeginAction) ActionType() string {
-	return "begin"
+	return "BEGIN"
 }
 
 type BoardAction struct {
@@ -36,7 +43,7 @@ type BoardAction struct {
 }
 
 func (a BoardAction) ActionType() string {
-	return "board"
+	return "BOARD"
 }
 
 type InfoAction struct {
@@ -44,21 +51,29 @@ type InfoAction struct {
 }
 
 func (a InfoAction) ActionType() string {
-	return "info"
+	return "INFO"
+}
+
+type ResultAction struct {
+	Result aiModels.GameEnd
+}
+
+func (a ResultAction) ActionType() string {
+	return "RESULT"
 }
 
 type EndAction struct {
 }
 
 func (a EndAction) ActionType() string {
-	return "end"
+	return "END"
 }
 
 type AboutAction struct {
 }
 
 func (a AboutAction) ActionType() string {
-	return "about"
+	return "ABOUT"
 }
 
 type UnknownAction struct {
@@ -66,7 +81,7 @@ type UnknownAction struct {
 }
 
 func (a UnknownAction) ActionType() string {
-	return "unknown"
+	return "UNKNOWN"
 }
 
 type ErrorAction struct {
@@ -74,6 +89,6 @@ type ErrorAction struct {
 }
 
 func (a ErrorAction) ActionType() string {
-	return "error"
+	return "ERROR"
 }
 

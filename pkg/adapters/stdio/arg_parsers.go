@@ -102,3 +102,28 @@ func parseBoardTurnArgs(s string) (aiModels.Turn, error) {
 		Player:   player,
 	}, nil
 }
+
+
+func parseResultArgs(s string) (aiModels.GameEnd, error) {
+	r := regexp.MustCompile(`^(\d)$`)
+	m := r.FindStringSubmatch(s)
+	if len(m) != 2 {
+		return 0, &InvalidFormatError{s: s, r: r}
+	}
+
+	result, err := strconv.ParseUint(m[1], 0, 8)
+	if err != nil {
+		return 0, err
+	}
+
+	switch result {
+	case 0:
+		return aiModels.Draw, nil
+	case 1:
+		return aiModels.Win, nil
+	case 2:
+		return aiModels.Loose, nil
+	default:
+		return 0, fmt.Errorf("invalid result value")
+	}
+}

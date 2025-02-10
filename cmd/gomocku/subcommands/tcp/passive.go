@@ -50,7 +50,7 @@ func passiveExecute(cmd *cobra.Command, args []string) {
         conn, err := listener.Accept()
         if err != nil {
             continue
-        }
+        }	
 		defer conn.Close()
 
 		tcp, err := adapters.NewTCPManagerInterface(conn, logger.With().Str("adapter", "tcp").Logger())

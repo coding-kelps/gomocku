@@ -18,6 +18,10 @@ func (std *StdioManagerInterface) parseStart(input string) (coordModels.ManagerA
 	}, nil
 }
 
+func (std *StdioManagerInterface) parseRestart(input string) (coordModels.ManagerAction, error) {
+	return coordModels.ResultAction{}, nil
+}
+
 func (std *StdioManagerInterface) parseTurn(input string) (coordModels.ManagerAction, error) {
 	p, err := parseTurnArgs(input)
 	if err != nil {
@@ -62,6 +66,17 @@ func (std *StdioManagerInterface) parseBoardBegin(input string) (coordModels.Man
 
 func (std *StdioManagerInterface) parseInfo(input string) (coordModels.ManagerAction, error) {
 	return coordModels.InfoAction{}, nil
+}
+
+func (std *StdioManagerInterface) parseResult(input string) (coordModels.ManagerAction, error) {
+	result, err := parseResultArgs(input)
+	if err != nil {
+		return nil, err
+	}
+
+	return coordModels.ResultAction{
+		Result: result,
+	}, nil
 }
 
 func (std *StdioManagerInterface) parseEnd(input string) (coordModels.ManagerAction, error) {

@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"fmt"
 	"io"
 	"encoding/binary"
 
@@ -17,6 +18,10 @@ func (tcp *TcpManagerInterface) StartHandler() (coordModels.ManagerAction, error
 	return coordModels.StartAction{
 		Size: payload[0],
 	}, nil
+}
+
+func (tcp *TcpManagerInterface) RestartHandler() (coordModels.ManagerAction, error) {
+	return coordModels.RestartAction{}, nil
 }
 
 func (tcp *TcpManagerInterface) TurnHandler() (coordModels.ManagerAction, error) {
@@ -86,6 +91,30 @@ func (tcp *TcpManagerInterface) InfoHandler() (coordModels.ManagerAction, error)
 
 	return coordModels.InfoAction{
 		Str: string(payload),
+	}, nil
+}
+
+func (tcp *TcpManagerInterface) ResultHandler() (coordModels.ManagerAction, error) {
+	payload := make([]byte, 1)
+	if _, err := io.ReadFull(tcp.conn, payload); err != nil {
+		return nil, err
+	}
+
+	var result aiModels.GameEnd
+
+	switch payload[0] {
+	case 0:
+		result = aiModels.Draw
+	case 1:
+		result = aiModels.Win
+	case 2:
+		result = aiModels.Loose
+	default:
+		return nil, fmt.Errorf("invalid result")
+	}
+
+	return coordModels.ResultAction{
+		Result: result,
 	}, nil
 }
 
