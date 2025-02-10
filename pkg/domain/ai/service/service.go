@@ -27,6 +27,19 @@ func (a *AI) Init(size uint8) error {
 	return nil
 }
 
+func (a *AI) Reset() error {
+	if a.board == nil {
+		return &models.BoardUnsetError{}
+	}
+
+	a.board.ResetBoard()
+	
+	a.logger.Debug().
+		Msg("reset board")
+
+	return nil
+}
+
 func (a *AI) RegisterMove(pos models.Position, player models.CellStatus) error {
 	if a.board == nil {
 		return &models.BoardUnsetError{}

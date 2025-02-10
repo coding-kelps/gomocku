@@ -12,10 +12,12 @@ func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction
 
 	handlers := map[byte]func()(coordModels.ManagerAction, error){
 		StartManagerActionID: 			tcp.StartHandler,
+		RestartManagerActionID:			tcp.RestartHandler,
 		TurnManagerActionID: 			tcp.TurnHandler,
 		BeginManagerActionID: 			tcp.BeginHandler,
 		BoardManagerActionID:			tcp.BoardHandler,
-		InfoManagerActionID: 			tcp.InfoHandler,	
+		InfoManagerActionID: 			tcp.InfoHandler,
+		ResultManagerActionID:			tcp.ResultHandler,
 		EndManagerActionID: 			tcp.EndHandler,
 		AboutManagerActionID: 			tcp.AboutHandler,
 		UnknownManagerActionID:			tcp.UnknownHandler,

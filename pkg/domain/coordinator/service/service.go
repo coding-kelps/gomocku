@@ -37,13 +37,19 @@ func (c *Coordinator) Serve() error {
             }
 
             switch cmd.ActionType() {
-            case "start":
+            case "START":
                 c.logger.Debug().
                     Str("action_type", cmd.ActionType()).
                     Msg("manager action received")
                 
                 c.startHandler(cmd.(models.StartAction))
-            case "turn":
+            case "RESTART":
+                c.logger.Debug().
+                    Str("action_type", cmd.ActionType()).
+                    Msg("manager action received")
+
+                c.restartHandler()
+            case "TURN":
                 turn := cmd.(models.TurnAction)
 
                 c.logger.Debug().
@@ -52,17 +58,29 @@ func (c *Coordinator) Serve() error {
                     Msg("manager action received")
                 
                 c.turnHandler(turn)
-            case "begin":
+            case "BEGIN":
                 c.logger.Debug().
                     Str("action_type", cmd.ActionType()).
                     Msg("manager action received")
                 
                 c.beginHandler()
-            case "board":
+            case "BOARD":
+                c.logger.Debug().
+                    Str("action_type", cmd.ActionType()).
+                    Msg("manager action received")
+                
                 board := cmd.(models.BoardAction)
 
                 c.boardHandler(board)
-            case "end":
+            case "RESULT":
+                c.logger.Debug().
+                    Str("action_type", cmd.ActionType()).
+                    Msg("manager action received")
+                
+                result := cmd.(models.ResultAction)
+
+                c.resultHandler(result)
+            case "END":
                 c.logger.Debug().
                     Str("action_type", cmd.ActionType()).
                     Msg("manager action received")
@@ -71,17 +89,21 @@ func (c *Coordinator) Serve() error {
                     Msg("game ending requested by manager")
                 
                 return nil
-            case "info":
+            case "INFO":
+                c.logger.Debug().
+                    Str("action_type", cmd.ActionType()).
+                    Msg("manager action received")
+                
                 info := cmd.(models.InfoAction)
 
                 c.infoHandler(info)
-            case "about":
+            case "ABOUT":
                 c.logger.Debug().
                     Str("action_type", cmd.ActionType()).
                     Msg("manager action received")
                 
                 c.aboutHandler()
-            case "unknown":
+            case "UNKNOWN":
                 c.logger.Debug().
                     Str("action_type", cmd.ActionType()).
                     Msg("manager action received")

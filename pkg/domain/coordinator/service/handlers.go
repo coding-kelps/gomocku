@@ -24,6 +24,11 @@ func (c *Coordinator) startHandler(a models.StartAction) error {
 	return nil
 }
 
+func (c *Coordinator) restartHandler() error {
+
+	return nil
+}
+
 func (c *Coordinator) turnHandler(a models.TurnAction) error {
 	err := c.ai.RegisterMove(a.Position, aiModels.OpponentStone)
 	if err != nil {
@@ -127,7 +132,30 @@ func (c *Coordinator) boardHandler(a models.BoardAction) error {
 	return nil
 }
 
-func (c *Coordinator) infoHandler(_ models.InfoAction) error {
+func (c *Coordinator) resultHandler(a models.ResultAction) error {
+	var resultStr string
+	
+	switch a.Result {
+	case aiModels.Draw:
+		resultStr = "draw"
+	case aiModels.Win:
+		resultStr = "win"
+	case aiModels.Loose:
+		resultStr = "loose"
+	}
+
+	c.logger.Info().
+		Str("result", resultStr).
+		Msg("game result")
+
+	return nil
+}
+
+func (c *Coordinator) infoHandler(a models.InfoAction) error {
+	c.logger.Info().
+		Str("info", a.Str).
+		Msg("manager info")
+
 	return nil
 }
 

@@ -60,6 +60,14 @@ func NewBoard(size uint8) *Board {
 	}
 }
 
+func (b *Board) ResetBoard() {
+	for x := range b.cells {
+		for y := range b.cells[x] {
+			b.cells[x][y] = Available
+		}
+	}
+}
+
 type OutOfBoundError struct {
 	position  Position
 	boardSize uint8
@@ -132,3 +140,11 @@ type BoardUnsetError struct {
 func (e *BoardUnsetError) Error() string {
 	return "game hasn't started"
 }
+
+type GameEnd uint8
+
+const (
+	Draw	GameEnd	= 0
+	Win		GameEnd	= 1
+	Loose	GameEnd = 2
+)
