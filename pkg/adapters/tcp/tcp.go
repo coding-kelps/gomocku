@@ -34,7 +34,7 @@ const (
 	ProtocolVersionPlayerActionID		byte	= 0x0C
 	ReadyPlayerActionID 				byte	= 0x0D
 	PlayPlayerActionID					byte	= 0x0E
-	PlayerDescriptionPlayerActionID		byte	= 0x0F
+	PlayerMetadataActionID				byte	= 0x0F
 	UnknownPlayerActionID				byte	= 0x10
 	ErrorPlayerActionID					byte	= 0x11
 	MessagePlayerActionID				byte	= 0x12

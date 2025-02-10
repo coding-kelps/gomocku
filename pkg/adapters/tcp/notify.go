@@ -35,7 +35,7 @@ func (tcp *TcpManagerInterface) NotifyMetadata(metadata map[string]string) error
 	metadata_len := make([]byte, 4)
     binary.BigEndian.PutUint32(metadata_len, uint32(len(ascii_metadata)))
 
-	data := append([]byte{PlayerDescriptionPlayerActionID}, append(metadata_len, ascii_metadata...)...)
+	data := append([]byte{PlayerMetadataActionID}, append(metadata_len, ascii_metadata...)...)
 	_, err := tcp.conn.Write(data)
 	
 	return err
