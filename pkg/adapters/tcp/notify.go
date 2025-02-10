@@ -2,8 +2,8 @@ package tcp
 
 import (
 	"encoding/binary"
-	"strings"
 	"fmt"
+	"strings"
 
 	aiModels "github.com/coding-kelps/gomocku/pkg/domain/ai/models"
 )

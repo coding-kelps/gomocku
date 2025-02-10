@@ -105,7 +105,7 @@ func parseBoardTurnArgs(s string) (aiModels.Turn, error) {
 
 
 func parseResultArgs(s string) (aiModels.GameEnd, error) {
-	r := regexp.MustCompile(`^(\d)$`)
+	r := regexp.MustCompile(`^RESULT (\d)$`)
 	m := r.FindStringSubmatch(s)
 	if len(m) != 2 {
 		return 0, &InvalidFormatError{s: s, r: r}
