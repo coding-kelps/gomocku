@@ -25,6 +25,10 @@ func (c *Coordinator) startHandler(a models.StartAction) error {
 }
 
 func (c *Coordinator) restartHandler() error {
+	err := c.ai.Reset()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
