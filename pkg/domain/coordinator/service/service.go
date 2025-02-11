@@ -1,9 +1,10 @@
 package service
 
 import (
+    "fmt"
 	"sync"
 
-    "github.com/rs/zerolog"
+	"github.com/rs/zerolog"
 
 	aiPorts "github.com/coding-kelps/gomocku/pkg/domain/ai/ports"
 	"github.com/coding-kelps/gomocku/pkg/domain/coordinator/models"
@@ -16,6 +17,7 @@ type Coordinator struct {
 	ai 					aiPorts.AI
 	lock				*sync.RWMutex
     logger              zerolog.Logger
+    endCh               chan struct{}
 
 	ports.Coordinator
 }
@@ -27,101 +29,40 @@ func (c *Coordinator) Serve() error {
 	go c.managerInterface.Listen(actionsCh, errorsCh)
 
 	for {
-        select {
-        case cmd, ok := <-actionsCh:
+        select {  
+        case _, ok := <-c.endCh:
             if !ok {
                 c.logger.Warn().
-                    Msg("action channel closed")
+                    Msg("end channel closed")
 
-                return nil
+                    return fmt.Errorf("end channel unexpectedly closed")
             }
 
-            switch cmd.ActionType() {
-            case "START":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                c.startHandler(cmd.(models.StartAction))
-            case "RESTART":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-
-                c.restartHandler()
-            case "TURN":
-                turn := cmd.(models.TurnAction)
-
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Uint8("turn_position_x", turn.Position.X).
-                    Msg("manager action received")
-                
-                c.turnHandler(turn)
-            case "BEGIN":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                c.beginHandler()
-            case "BOARD":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                board := cmd.(models.BoardAction)
-
-                c.boardHandler(board)
-            case "RESULT":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                result := cmd.(models.ResultAction)
-
-                c.resultHandler(result)
-            case "END":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-
-                c.logger.Info().
-                    Msg("game ending requested by manager")
-                
-                return nil
-            case "INFO":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                info := cmd.(models.InfoAction)
-
-                c.infoHandler(info)
-            case "ABOUT":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                c.aboutHandler()
-            case "UNKNOWN":
-                c.logger.Debug().
-                    Str("action_type", cmd.ActionType()).
-                    Msg("manager action received")
-                
-                c.UnknownHandler()
+            return nil
+        
+        case action, ok := <-actionsCh:
+            if !ok {
+                select {
+                case <-c.endCh:
+                    return nil
+                default:
+                    return fmt.Errorf("connection to manager unexpectedly interrupted")
+                }
+            }
+            err := c.actionHandler(action)
+            if err != nil {
+                return err
             }
 
         case err, ok := <-errorsCh:
             if !ok {
-                c.logger.Warn().
-                    Msg("error channel closed")
+                return fmt.Errorf("connection to manager unexpectedly interrupted")
 
-                return nil
             }
 
             c.logger.Error().
                 Err(err).
-                Msg("coordinator's listener error")
+                Msg("coordinator's interface error")
 
             return err
         }
@@ -131,14 +72,15 @@ func (c *Coordinator) Serve() error {
 func NewCoordinator(managerInterface ports.ManagerInterface, ai aiPorts.AI, logger zerolog.Logger) ports.Coordinator {
 	return &Coordinator{
 		managerInterface: managerInterface,
-		ai: ai,
-		lock: &sync.RWMutex{},
-		metadata: map[string]string{
+		ai:         ai,
+		lock:       &sync.RWMutex{},
+		metadata:   map[string]string{
 			"name":    "gomocku",
 			"version": "0.1",
 			"author":  "Coding Kelps",
 			"desc":    "A mock AI for manager testing",
 		},
-        logger: logger,
+        logger:     logger,
+        endCh:      make(chan struct{}, 1),
 	}
 }

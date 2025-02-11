@@ -8,8 +8,6 @@ import (
 )
 
 func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction, errorsCh chan<-error) {
-	defer close(actionsCh)
-
 	handlers := map[byte]func()(coordModels.ManagerAction, error){
 		StartManagerActionID: 			tcp.StartHandler,
 		RestartManagerActionID:			tcp.RestartHandler,
@@ -27,7 +25,7 @@ func (tcp *TcpManagerInterface) Listen(actionsCh chan<-coordModels.ManagerAction
 	for {
 		var actionID [1]byte
 		if _, err := io.ReadFull(tcp.conn, actionID[:]); err != nil {
-			errorsCh <- err
+			close(actionsCh)
 
 			return
 		}
