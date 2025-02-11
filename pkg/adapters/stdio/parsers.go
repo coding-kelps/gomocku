@@ -19,7 +19,7 @@ func (std *StdioManagerInterface) parseStart(input string) (coordModels.ManagerA
 }
 
 func (std *StdioManagerInterface) parseRestart(input string) (coordModels.ManagerAction, error) {
-	return coordModels.ResultAction{}, nil
+	return coordModels.RestartAction{}, nil
 }
 
 func (std *StdioManagerInterface) parseTurn(input string) (coordModels.ManagerAction, error) {
