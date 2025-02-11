@@ -30,6 +30,11 @@ func (c *Coordinator) restartHandler() error {
 		return err
 	}
 
+	err = c.managerInterface.NotifyReadiness()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
